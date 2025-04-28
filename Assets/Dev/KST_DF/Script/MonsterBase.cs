@@ -8,10 +8,10 @@ public class MonsterBase : MonoBehaviour
     //체력 관련
     [Header("Hp")]
     //체력
-    [SerializeField] private int hp;
+    [SerializeField] protected int hp = 10;
     public int HP{get{return hp;}}
     //최대 체력
-    [SerializeField] public int maxHp;
+    [SerializeField] protected int maxHp= 10;
     public int MaxHP{get{return maxHp;}}
 
 
@@ -19,28 +19,30 @@ public class MonsterBase : MonoBehaviour
 
     [Header("Attack Func")]
     //공격 데미지
-    [SerializeField] private int attackDamage;
+    [SerializeField] protected int attackDamage = 2;
     //충돌(몸박) 데미지
-    [SerializeField] private int collsionDamage;
+    [SerializeField] protected int collsionDamage = 1;
 
     //공격 쿨타임 코루틴
     private Coroutine attackCoroutine;
 
     //공격 쿨타임
-    [SerializeField] private float attackCooldown = 1f;
+    [SerializeField] protected float attackCooldown = 1f;
     //공격 가능 여부 변수
     [SerializeField] private bool canAttack = true;
-    [SerializeField] private bool isPlayerInAttackArea;
+    [SerializeField] private bool isPlayerInAttackArea = false;
+    [SerializeField] private SphereCollider sphereCollider;
+    [SerializeField] protected float attackRange =2f;
 
 
     //기타 스탯들 ~~~
     [Header("Status Etc")] 
-    [SerializeField] private float moveSpeed;
+    [SerializeField] protected float moveSpeed;
 
     [Header("Tracking")]
     //플레이어 트래킹 여부
-    [SerializeField] private bool isTrackingPlayer;
-    private Transform playerPos;
+    // [SerializeField] private bool isTrackingPlayer;
+    [SerializeField]private Transform playerPos;
 
 
     /*AI 및 추적 로직
@@ -48,10 +50,25 @@ public class MonsterBase : MonoBehaviour
     다양한 타입의 적 구현
     */
 
-    private void Start()
+    void OnEnable()
+    {
+        FindingPlayer();
+        //player.OnPlayerDied.AddListner(HandlePlayerDied)
+    }
+    void OnDisable()
+    {
+        //player.OnPlayerDied.RemoveListner(HandlePlayerDied)
+        
+    }
+
+    protected virtual void Start()
     {
         //씬 내의 플레이어 태그를 가진 오브젝트 1개를 찾기. (플레이어 2개시 해당 라인 변경 바람.)
         FindingPlayer();
+        if(sphereCollider !=null)
+        {
+            sphereCollider.radius = attackRange;
+        }
     }
 
     private void FindingPlayer()
@@ -66,13 +83,14 @@ public class MonsterBase : MonoBehaviour
 
     private void Update()
     {
-        // // 플레이어 사망시 태그 해제 후 플레이어 부활시 플레이어 다시 찾기.
-        // if(playerPos  == null)
-        // {
-        //     FindingPlayer();
-        //     return;
-        // }
+        // 플레이어 객체 
+        if(playerPos  == null)
+        {
+            Debug.Log("플레이어 어디감?");
+            return;
+        } 
 
+            
         //공격범위 내에 있을 경우 플레이어를 바라보면서 공격, 아닐 경우 플레이어 위치 추척하며 이동
         if(!isPlayerInAttackArea)
         {
@@ -95,6 +113,7 @@ public class MonsterBase : MonoBehaviour
     }
     #region 몬스터의 플레이어 추적 로직
 
+    //플레이어 위치 & 방향
     private void MoveToPlayer()
     {
         if(playerPos == null) return;
@@ -109,6 +128,18 @@ public class MonsterBase : MonoBehaviour
         Vector3 targetPos = new Vector3(playerPos.transform.position.x, transform.position.y, playerPos.transform.position.z);
         transform.LookAt(targetPos);
     }
+
+    //플레이어 사망 이벤트
+
+    private void HandlePlayerDied()
+    {
+        Debug.Log("플레이어 사망 이벤트");
+        //공격 사거리 및 위치 해제
+        isPlayerInAttackArea = false;
+        playerPos = null;
+    }
+
+
     #endregion
 
     #region 몬스터 피격 & 공격 로직
@@ -130,11 +161,18 @@ public class MonsterBase : MonoBehaviour
     //공격 로직
     private void AttackPlayer()
     {
-        Debug.Log($"{gameObject.name} : 플레이어에게 공격로직 실행");
-        // if(player!=null)
-        // {
-        //     player.TakeDamage(attackDamage);
-        // }
+        if(playerPos != null)
+        {
+            Debug.Log($"{gameObject.name} : 플레이어에게 공격로직 실행");
+            // if(player!=null)
+            // {
+            //     player.TakeDamage(attackDamage);
+            // }
+
+            //공격 이펙트 오브젝트 풀 패턴
+        }
+
+
 
     }
     //공격 쿨타임 코루틴
