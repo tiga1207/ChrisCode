@@ -5,10 +5,11 @@ using UnityEngine;
 
 
 [Serializable]
-public class Trait : MonoBehaviour
+public class Trait
 {
     public string traitName;
     public string description;
     public TraitType type;
     public float value;
 }
+
