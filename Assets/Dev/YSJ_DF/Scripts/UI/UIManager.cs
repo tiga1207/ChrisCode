@@ -9,7 +9,7 @@ namespace Scripts.UI
         public static UIManager Instance { get; private set; }
 
         [SerializeField] private Transform _uiRoot;
-        private SceneType _currentMainUISceneType = SceneType.None;
+        private SceneID _currentMainUISceneType = SceneID.None;
 
         private readonly Dictionary<string, UIPanelBase> _panelInstances = new(); // 패널들
         private readonly Stack<UIPanelBase> _panelStack = new(); // 패널 스택(저장공간)
@@ -44,7 +44,7 @@ namespace Scripts.UI
             CloseAllPanels();
         }
 
-        public void LoadSceneUI(SceneType sceneType, GameObject uiScenePrefab = null)
+        public void LoadSceneUI(SceneID sceneType, GameObject uiScenePrefab = null)
         {
             string sceneStr= sceneType.ToString();
 

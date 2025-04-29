@@ -1,12 +1,20 @@
+using Scripts.Manager;
+
 namespace Scripts.Scene
 {
     public class InGameScene : SceneBase
     {
-        public override SceneType SceneType => SceneType.InGame;
+        public override SceneID SceneID => SceneID.InGame;
 
-        protected override void InitializeSceneUI()
+        public override void Initialize()
         {
-            // InGame ¾À Àü¿ë UI ¼¼ÆÃ
+            base.Initialize();
+            ManagerGroup.Instance.RegisterManager(InGameManager.Instance);
+            ManagerGroup.Instance.RegisterManager(AudioManager.Instance);
+        }
+
+        private void Start()
+        {
         }
     }
 }
