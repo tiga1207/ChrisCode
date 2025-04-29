@@ -244,7 +244,8 @@ public class MonsterBase : MonoBehaviour
             // if(player.canBodyAttack)
             // {
                 // TakeDamage(player.atk);
-                TakeDamage(0);
+                TakeDamage(10);
+                Debug.Log("데미지 입음");
             // }
         }
     }
