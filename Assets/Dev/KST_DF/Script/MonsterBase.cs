@@ -6,11 +6,11 @@ using UnityEngine;
 //일반 몬스터 타입
 public enum MonsterType{Goblin, Skeleton, etc}
 
-// 플레이어를 원형으로 가두는 몬스터 타입
-public enum CircleMonsterType{}
+// // 플레이어를 원형으로 가두는 몬스터 타입
+// public enum CircleMonsterType{}
 
-// 일직선으로 날아가는 몬스터 타입
-public enum StraightMonsterType{}
+// // 일직선으로 날아가는 몬스터 타입
+// public enum StraightMonsterType{}
 public class MonsterBase : MonoBehaviour
 {
     //체력 관련
@@ -46,7 +46,6 @@ public class MonsterBase : MonoBehaviour
     //기타 스탯들 ~~~
     [Header("Status Etc")] 
     [SerializeField] protected float moveSpeed;
-    [SerializeField] 
     public MonsterType monsterType;
 
     [Header("Tracking")]
@@ -55,7 +54,7 @@ public class MonsterBase : MonoBehaviour
     [SerializeField]private Transform playerPos;
     //플레이어 추적 기능 가진 몬스터 변수 
     // (기본값: true, 원형포진이거나, 일정 방향으로 날아가는 몬스터는 false)
-    [SerializeField]private bool canTrackingPlayer= true;
+    [SerializeField]protected bool canTrackingPlayer= true;
 
 
     /*AI 및 추적 로직
@@ -245,7 +244,7 @@ public class MonsterBase : MonoBehaviour
             // if(player.canBodyAttack)
             // {
                 // TakeDamage(player.atk);
-                TakeDamage(10);
+                TakeDamage(0);
             // }
         }
     }
