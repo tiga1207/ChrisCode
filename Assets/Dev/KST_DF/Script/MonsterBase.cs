@@ -3,6 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//일반 몬스터 타입
+public enum MonsterType{Goblin, Skeleton, etc}
+
+// 플레이어를 원형으로 가두는 몬스터 타입
+public enum CircleMonsterType{}
+
+// 일직선으로 날아가는 몬스터 타입
+public enum StraightMonsterType{}
 public class MonsterBase : MonoBehaviour
 {
     //체력 관련
@@ -38,11 +46,16 @@ public class MonsterBase : MonoBehaviour
     //기타 스탯들 ~~~
     [Header("Status Etc")] 
     [SerializeField] protected float moveSpeed;
+    [SerializeField] 
+    public MonsterType monsterType;
 
     [Header("Tracking")]
     //플레이어 트래킹 여부
     // [SerializeField] private bool isTrackingPlayer;
     [SerializeField]private Transform playerPos;
+    //플레이어 추적 기능 가진 몬스터 변수 
+    // (기본값: true, 원형포진이거나, 일정 방향으로 날아가는 몬스터는 false)
+    [SerializeField]private bool canTrackingPlayer= true;
 
 
     /*AI 및 추적 로직
@@ -53,10 +66,26 @@ public class MonsterBase : MonoBehaviour
     void OnEnable()
     {
         FindingPlayer();
+        InitStatus();
         //player.OnPlayerDied.AddListner(HandlePlayerDied)
     }
-    void OnDisable()
+
+    protected virtual void InitStatus()
     {
+        hp = maxHp;
+        isPlayerInAttackArea = false;
+        canAttack= true;
+    }
+
+    protected virtual void OnDisable()
+    {
+        if(attackCoroutine !=null)
+        {
+            StopCoroutine(attackCoroutine);
+            attackCoroutine =null;
+        }
+        isPlayerInAttackArea = false;
+        canAttack=true;
         //player.OnPlayerDied.RemoveListner(HandlePlayerDied)
         
     }
@@ -71,17 +100,7 @@ public class MonsterBase : MonoBehaviour
         }
     }
 
-    private void FindingPlayer()
-    {
-        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-
-        if (playerObj != null)
-        {
-            playerPos = playerObj.transform;
-        }
-    }
-
-    private void Update()
+    protected virtual void Update()
     {
         // 플레이어 객체 
         if(playerPos  == null)
@@ -92,13 +111,16 @@ public class MonsterBase : MonoBehaviour
 
             
         //공격범위 내에 있을 경우 플레이어를 바라보면서 공격, 아닐 경우 플레이어 위치 추척하며 이동
-        if(!isPlayerInAttackArea)
+        if(canTrackingPlayer) // 플레이어를 추적하는 몬스터의 경우만.
         {
-            MoveToPlayer();
-        }
-        else
-        {
-            LookPlayer();
+            if(!isPlayerInAttackArea)
+            {
+                MoveToPlayer();
+            }
+            else
+            {
+                LookPlayer();
+            }
         }
 
         if(isPlayerInAttackArea && canAttack)
@@ -111,10 +133,19 @@ public class MonsterBase : MonoBehaviour
             }
         }
     }
+    protected virtual void FindingPlayer()
+    {
+        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+
+        if (playerObj != null)
+        {
+            playerPos = playerObj.transform;
+        }
+    }
     #region 몬스터의 플레이어 추적 로직
 
     //플레이어 위치 & 방향
-    private void MoveToPlayer()
+    protected virtual void MoveToPlayer()
     {
         if(playerPos == null) return;
         Vector3 targetPos = new Vector3(playerPos.transform.position.x, transform.position.y, playerPos.transform.position.z);
@@ -122,7 +153,7 @@ public class MonsterBase : MonoBehaviour
         transform.LookAt(targetPos);
     }
 
-    private void LookPlayer()
+    protected virtual void LookPlayer()
     {
         if(playerPos == null) return;
         Vector3 targetPos = new Vector3(playerPos.transform.position.x, transform.position.y, playerPos.transform.position.z);
@@ -131,7 +162,7 @@ public class MonsterBase : MonoBehaviour
 
     //플레이어 사망 이벤트
 
-    private void HandlePlayerDied()
+    protected virtual void HandlePlayerDied()
     {
         Debug.Log("플레이어 사망 이벤트");
         //공격 사거리 및 위치 해제
@@ -159,7 +190,7 @@ public class MonsterBase : MonoBehaviour
 
     }
     //공격 로직
-    private void AttackPlayer()
+    protected virtual void AttackPlayer()
     {
         if(playerPos != null)
         {
@@ -213,7 +244,8 @@ public class MonsterBase : MonoBehaviour
             //플레이어가 몬스터에게 몸박 데미지 아이템을 갖고 있는 경우
             // if(player.canBodyAttack)
             // {
-            //     TakeDamage(player.atk);
+                // TakeDamage(player.atk);
+                TakeDamage(10);
             // }
         }
     }
@@ -222,18 +254,13 @@ public class MonsterBase : MonoBehaviour
     #endregion
 
     #region 몬스터 생성 및 사망 로직
-    //몬스터 생성 로직
-    private void SpawnMonster()
-    {
-
-    }
     //몬스터 사망 로직
     private void MonsterDied()
     {
         //오브젝트 풀로 구현할 경우
-
+        MonsterPoolManager.instance.ReturnPool(this);
         //아닐 경우
-        Destroy(gameObject);
+        // Destroy(gameObject);
     }
     #endregion
 }
