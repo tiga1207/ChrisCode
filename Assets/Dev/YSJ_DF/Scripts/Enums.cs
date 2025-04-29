@@ -1,10 +1,11 @@
 namespace Scripts
 {
-    public enum SceneType
+    public enum SceneID
     {
-        None = 0,
-        Title,
-        InGame,
+        None,           // 기본 상태 
+        Title,          // Title 1
+        CharacterChoose,// InGame 2
+        InGame,         // InGame 2
     }
 
     // 결과 확인
@@ -21,6 +22,6 @@ namespace Scripts
         None,     // 기본 상태 (선택사항)
         Playing,  // 게임이 진행 중
         Paused,   // 일시 정지
-        Stopped   // 강제 멈춤 (게임 결과)
+        Stopped   // 강제 멈춤
     }
 }
