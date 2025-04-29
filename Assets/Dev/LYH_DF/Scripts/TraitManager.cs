@@ -7,17 +7,73 @@ public class TraitManager : MonoBehaviour
     private CharacterMove characterMove; // 김채윤님 제작 능력치 스크립트 차후 반영 
     private PlayerHp playerHP; // 김채윤님 제작 PlayerHP.cs 추후 반영
 
+    // 특성 효과 저장을 위한 딕셔너리
+    private Dictionary<TraitType, System.Action<float>> traitEffects;
+
     public List<Trait> acquiredTraits = new List<Trait>();
 
     private void Start()
     {
         characterMove = FindObjectOfType<CharacterMove>(); // 플레이어 이동속도 스크립트 찾기
         playerHP = FindObjectOfType<PlayerHp>(); // 플레이어 HP 스크립트 찾기
+
+        SetupTraitEffects(); // 특성 효과 딕셔너리 초기화
+    }
+
+    private void SetupTraitEffects()
+    {
+        traitEffects = new Dictionary<TraitType, System.Action<float>>
+        {
+            {
+                TraitType.MoveSpeed, (value) =>
+                {
+                    if (characterMove != null)
+                    {
+                        characterMove.moveSpeed *= value;
+                        Debug.Log($"이동속도 증가! 현재 이동속도 : {characterMove.moveSpeed}");
+                    }
+                }
+            },
+
+            {
+                TraitType.MaxHealth, (value) =>
+                {
+                    if (playerHP != null)
+                    {
+                        playerHP.MaxHealth = Mathf.RoundToInt(playerHP.MaxHealth * value);
+                        Debug.Log($"최대체력 증가! 현재 최대체력 : {playerHP.MaxHealth}");
+                    }
+                }
+            },
+
+            {
+                TraitType.AttackSpeed, (value) =>
+                {
+                    if (attackSpeed != null)
+                    {
+
+                    }
+                }
+            }
+        }
     }
 
     public void ApplyTrait(Trait trait)
     {
-        acquiredTraits.Add(trait); // 리스트에 추가
+        // 기존 특성과 겹치는지 확인해야 한다.
+        Trait existingTrait = acquiredTraits.Find(t => t.type == trait.type);
+
+        if (existingTrait != null)
+        {
+            Debug.Log($"{trait.traitName} 특성 강화!");
+
+            // 이미 한번 가진 특성일 경우 추가 강화
+            switch (trait.type)
+            {
+                case TraitType.MoveSpeed:
+                    if (cha)
+            }
+        }
 
         switch (trait.type)
         {

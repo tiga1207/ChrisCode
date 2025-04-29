@@ -31,6 +31,10 @@ public class PlayerExperimence : MonoBehaviour
             List<Trait> randomTraits = TraitDataBase.Instance.GetRandomTraits(3);
             traitUIManager.OpenTraitSelection(randomTraits); // 뽑은 특성 넘기기
         }
+        else
+        {
+            Debug.LogWarning("TraitUIManager가 연결되지 않았습니다.");
+        }
     }
 
     // 임시 레벨업 코드

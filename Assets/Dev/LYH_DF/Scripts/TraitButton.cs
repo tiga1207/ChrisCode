@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TraitButton : MonoBehaviour
 {
@@ -25,6 +26,9 @@ public class TraitButton : MonoBehaviour
         {
             traitDesc.text = trait.description;
         }
+
+        GetComponent<Button>().onClick.RemoveAllListeners(); // 기존 연결 삭제
+        GetComponent<Button>().onClick.AddListener(OnClick); // 현재 traitData 기준으로 새로연결
     }
 
     public void OnClick()

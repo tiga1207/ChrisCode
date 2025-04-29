@@ -11,6 +11,7 @@ public class TraitUIManager : MonoBehaviour
 
     public void OpenTraitSelection(List<Trait> traits)
     {
+        Debug.Log("UI 특성 선택창 열기 시도");
         if (traitUIPanel != null)
         {
             traitUIPanel.SetActive(true);
@@ -20,6 +21,7 @@ public class TraitUIManager : MonoBehaviour
             {
                 if (i < traits.Count)
                 {
+                    Debug.Log($"특성 {i + 1} 활성화 - {traits[i].traitName}");
                     traitButtons[i].gameObject.SetActive(true); // 버튼 활성화
                     traitButtons[i].Setup(traits[i], OnTraitSelected);
                 }
@@ -28,6 +30,10 @@ public class TraitUIManager : MonoBehaviour
                     traitButtons[i].gameObject.SetActive(false); // 필요 없는 버튼 비활성화
                 }
             }
+        }
+        else
+        {
+            Debug.Log("UI traitUIPanel이 null입니다.");
         }
     }
 
