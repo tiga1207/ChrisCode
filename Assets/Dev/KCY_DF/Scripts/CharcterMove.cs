@@ -18,6 +18,8 @@ public class CharacterMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+    // 플레이어 기본 이동 방식
         if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
         {
             transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime);
