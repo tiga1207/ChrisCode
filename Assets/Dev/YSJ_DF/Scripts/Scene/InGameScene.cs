@@ -1,12 +1,17 @@
+using Scripts.UI;
+
 namespace Scripts.Scene
 {
     public class InGameScene : SceneBase
     {
-        public override SceneType SceneType => SceneType.InGame;
+        public override SceneId SceneID => SceneId.InGame;
 
         protected override void InitializeSceneUI()
         {
-            // InGame 씬 전용 UI 세팅
         }
+
+        // 사운
+        // 캐릭터 데이터 
+        ///
     }
 }

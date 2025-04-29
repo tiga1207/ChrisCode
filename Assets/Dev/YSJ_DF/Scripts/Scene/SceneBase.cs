@@ -6,7 +6,7 @@ namespace Scripts.Scene
     public abstract class SceneBase : MonoBehaviour
     {
         // 해당 씬이 어떤 씬인지
-        public abstract SceneType SceneType { get; }
+        public abstract SceneId SceneID { get; }
 
         // 리소스 로드 매니저 개발시 삭제 예정
 

@@ -4,11 +4,10 @@ namespace Scripts.Scene
 {
     public class TitleScene : SceneBase
     {
-        public override SceneType SceneType => SceneType.Title;
+        public override SceneId SceneID => SceneId.Title;
 
         protected override void InitializeSceneUI()
         {
-            UIManager.Instance.LoadSceneUI(SceneType, _sceneUIPrefab);
         }
     }
 }

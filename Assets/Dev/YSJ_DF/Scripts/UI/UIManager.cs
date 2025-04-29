@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.SceneManagement;
+﻿using UnityEngine;
 
 namespace Scripts.UI
 {
@@ -8,30 +6,23 @@ namespace Scripts.UI
     {
         public static UIManager Instance { get; private set; }
 
-        [SerializeField] private Transform _uiRoot;
-        private SceneType _currentMainUISceneType = SceneType.None;
+        [SerializeField] private Canvas _mainCanvas;
 
-        private readonly Dictionary<string, UIPanelBase> _panelInstances = new(); // 패널들
-        private readonly Stack<UIPanelBase> _panelStack = new(); // 패널 스택(저장공간)
-        private readonly List<string> _savedPanelStack = new(); // 저장된 패널 스택(이름)
+        private Transform _hudRoot;
+        private Transform _popupRoot;
+        private Transform _overlayRoot;
+
+        private int _hudSortingOrder = (int)UILevel.HUD * 100;
+        private int _popupSortingOrder = (int)UILevel.Popup * 100;
+        private int _overlaySortingOrder = (int)UILevel.Overlay * 100;
 
         private void Awake()
-        {
-            InitializeSingleton();
-        }
-
-        private void OnDestroy()
-        {
-            SceneManager.sceneLoaded -= OnSceneLoaded;
-        }
-
-        private void InitializeSingleton()
         {
             if (Instance == null)
             {
                 Instance = this;
                 DontDestroyOnLoad(gameObject);
-                SceneManager.sceneLoaded += OnSceneLoaded;
+                InitializeRoots();
             }
             else
             {
@@ -39,120 +30,82 @@ namespace Scripts.UI
             }
         }
 
-        private void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode mode)
+        private void InitializeRoots()
         {
-            CloseAllPanels();
-        }
-
-        public void LoadSceneUI(SceneType sceneType, GameObject uiScenePrefab = null)
-        {
-            string sceneStr= sceneType.ToString();
-
-            GameObject sceneObject;
-            if (uiScenePrefab == null)
-                sceneObject = Resources.Load<GameObject>($"UI/UI_Scene_{sceneStr}");
-            else
-                sceneObject = uiScenePrefab;
-
-            Instantiate(sceneObject);
-        }
-
-        public void OpenPanel(string panelName)
-        {
-            if (_panelInstances.ContainsKey(panelName))
+            if (_mainCanvas == null)
             {
-                PushPanel(_panelInstances[panelName]);
-                return;
-            }
-
-            var panelPrefab = UIRegistry.GetPrefab(panelName);
-            if (panelPrefab == null)
-            {
-                Debug.LogError($"[UIManager] Cannot find prefab for {panelName}");
-                return;
-            }
-
-            var panelInstance = Instantiate(panelPrefab, _uiRoot);
-            var panelBase = panelInstance.GetComponent<UIPanelBase>();
-            _panelInstances.Add(panelName, panelBase);
-
-            PushPanel(panelBase);
-        }
-
-        public void CloseCurrentPanel()
-        {
-            if (_panelStack.Count == 0)
-                return;
-
-            var topPanel = _panelStack.Pop();
-            topPanel.Hide();
-            Destroy(topPanel.gameObject, 1f);
-
-            if (_panelStack.Count > 0)
-            {
-                var previousPanel = _panelStack.Peek();
-                previousPanel.Show();
-            }
-        }
-
-        public void CloseAllPanels()
-        {
-            while (_panelStack.Count > 0)
-            {
-                var panel = _panelStack.Pop();
-                if (panel != null)
+                _mainCanvas = FindObjectOfType<Canvas>();
+                if (_mainCanvas == null)
                 {
-                    panel.Hide();
-                    Destroy(panel.gameObject, 1f);
+                    Debug.LogError("[UIManager] Canvas not found in scene.");
+                    return;
                 }
             }
 
-            _panelInstances.Clear();
+            _hudRoot = CreateRoot("HUDRoot", _hudSortingOrder);
+            _popupRoot = CreateRoot("PopupRoot", _popupSortingOrder);
+            _overlayRoot = CreateRoot("OverlayRoot", _overlaySortingOrder);
         }
 
-        public bool HasPanels()
+        private Transform CreateRoot(string name, int sortingOrder)
         {
-            return _panelStack.Count > 0;
-        }
+            Transform root = _mainCanvas.transform.Find(name);
 
-        public void SavePanelStack()
-        {
-            _savedPanelStack.Clear();
-
-            foreach (var panel in _panelStack)
+            if (root == null)
             {
-                _savedPanelStack.Add(panel.name.Replace("(Clone)", "").Trim());
+                GameObject go = new GameObject(name);
+                root = go.transform;
+                root.SetParent(_mainCanvas.transform);
+                root.localScale = Vector3.one;
+                root.localPosition = Vector3.zero;
+                root.localRotation = Quaternion.identity;
+
+                var canvas = go.AddComponent<Canvas>();
+                canvas.overrideSorting = true;
+                canvas.sortingOrder = sortingOrder;
+
+                go.AddComponent<CanvasGroup>();
             }
 
-            _savedPanelStack.Reverse();
-            Debug.Log("[UIManager] Panel Stack Saved");
+            return root;
         }
 
-        public void RestorePanelStack()
+        // 이후에 이 Root들을 사용해서 패널을 각각 부모로 배치하게 된다.
+        public Transform GetRoot(UILevel level)
         {
-            if (_savedPanelStack.Count == 0)
-                return;
-
-            CloseAllPanels();
-
-            foreach (var panelName in _savedPanelStack)
+            return level switch
             {
-                OpenPanel(panelName);
-            }
-
-            Debug.Log("[UIManager] Panel Stack Restored");
+                UILevel.HUD => _hudRoot,
+                UILevel.Popup => _popupRoot,
+                UILevel.Overlay => _overlayRoot,
+                _ => _hudRoot
+            };
         }
 
-        private void PushPanel(UIPanelBase newPanel)
+        public void RegisterPanelCanvas(UIPanelBase panel)
         {
-            if (_panelStack.Count > 0)
+            Canvas panelCanvas = panel.GetComponent<Canvas>();
+
+            if (panelCanvas == null)
             {
-                var current = _panelStack.Peek();
-                current.Hide();
+                panelCanvas = panel.gameObject.AddComponent<Canvas>();
+                panel.gameObject.AddComponent<CanvasGroup>();
             }
 
-            _panelStack.Push(newPanel);
-            newPanel.Show();
+            panelCanvas.overrideSorting = true;
+
+            if (panel.Level == UILevel.Popup)
+            {
+                panelCanvas.sortingOrder = ++_popupSortingOrder;
+            }
+            else if (panel.Level == UILevel.Overlay)
+            {
+                panelCanvas.sortingOrder = ++_overlaySortingOrder;
+            }
+            else
+            {
+                panelCanvas.sortingOrder = 0; // HUD는 기본 Canvas에 포함되므로 따로 순서 조정 안 함
+            }
         }
     }
 }
