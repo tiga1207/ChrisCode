@@ -6,6 +6,12 @@ namespace Scripts.Scene
     {
         public abstract SceneID SceneID { get; }
 
+        protected void Awake()
+        {
+            Initialize();
+            LoadManagers();
+        }
+
         public virtual void Initialize()
         {
             Debug.Log($"Scene {SceneID} Initialized.");
