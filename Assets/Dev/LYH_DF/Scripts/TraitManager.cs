@@ -6,7 +6,7 @@ public class TraitManager : MonoBehaviour
 {
     private CharacterMove characterMove; // 김채윤님 제작 능력치 스크립트 차후 반영 
     private PlayerHp playerHP; // 김채윤님 제작 PlayerHP.cs 추후 반영
-    private NewBehaviourScript playerAttack;  //*차후 수정필요
+    private PlayerAttack playerAttack;  //*차후 수정필요
 
     // 특성 효과 저장을 위한 딕셔너리
     private Dictionary<TraitType, System.Action<float>> traitEffects;
@@ -19,7 +19,7 @@ public class TraitManager : MonoBehaviour
     {
         characterMove = FindObjectOfType<CharacterMove>(); // 플레이어 이동속도 스크립트 찾기
         playerHP = FindObjectOfType<PlayerHp>(); // 플레이어 HP 스크립트 찾기
-        playerAttack = FindAnyObjectByType<NewBehaviourScript>(); //* 차후 수정필요 / 플레이어 공격 스크립트 찾기
+        playerAttack = FindAnyObjectByType<PlayerAttack>(); //* 차후 수정필요 / 플레이어 공격 스크립트 찾기
 
         SetupTraitEffects(); // 특성 효과 딕셔너리 초기화
     }
@@ -53,14 +53,22 @@ public class TraitManager : MonoBehaviour
             {
                 TraitType.AttackPower, (value) =>
                 {
-                    Debug.Log($"공격력 증가! {value}배 적용");
+                    if (playerAttack != null)
+                    {
+                        playerAttack.AttackPower *= value;
+                        Debug.Log($"공격력 증가!! {value}배 적용! 현재 공격력 : {playerAttack.AttackPower}");
+                    }
                 }
             },
 
             {
                 TraitType.AttackSpeed, (value) =>
                 {
-                    Debug.Log($"공격속도 증가! {value}배 적용");
+                    if (playerAttack != null)
+                    {
+                        playerAttack.AttackSpeed *= value;
+                        Debug.Log($"공격속도 증가! {value}배 적용! 현재 속도 : {playerAttack.AttackSpeed}");
+                    }                    
                 }
             }
         };
@@ -138,6 +146,26 @@ public class TraitManager : MonoBehaviour
 
         // 특성 보유 x
         return false;
+    }
+
+    public void HealOnKill()
+    {
+        if (acquiredTraits.TryGetValue(TraitType.HealOnKill, out Trait trait))
+        {
+            // 특성 value 값만큼 회복량 계산
+            float rawhealAmount = trait.value;
+            int healAmount = Mathf.RoundToInt(rawhealAmount); // 소수점 반올림
+
+            if (playerHP != null)
+            {
+                playerHP.Heal(healAmount); //*** PlayerHP에 돌료가 만든 함수 구현 필요
+                Debug.Log($"몬스터 처치 시 체력  {healAmount} 회복!");
+            }
+            else
+            {
+                Debug.LogWarning("PlayerHP 컴포넌트가 없습니다. 회복실패");
+            }
+        }
     }
 
 }
