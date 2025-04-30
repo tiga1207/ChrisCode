@@ -49,6 +49,10 @@ public class MonsterBase : MonoBehaviour
     // (기본값: true, 원형포진이거나, 일정 방향으로 날아가는 몬스터는 false)
     [SerializeField]protected bool m_canTrackingPlayer= true;
 
+    [Header("플레이어")]
+    //플레이어 체력
+    [SerializeField] private PlayerHp playerHp;
+
 
     /*AI 및 추적 로직
     지속적 스폰
@@ -190,6 +194,8 @@ public class MonsterBase : MonoBehaviour
             // {
             //     player.TakeDamage(attackDamage);
             // }
+            playerHp.TakeDamage(m_collsionDamage);
+            Debug.Log($"{gameObject.name}이 플레이어에게 데미지를 입힘");
 
             //공격 이펙트 오브젝트 풀 패턴
         }
@@ -210,7 +216,9 @@ public class MonsterBase : MonoBehaviour
     {
         if(other.gameObject.CompareTag("Player"))
         {
+            playerHp = other.GetComponent<PlayerHp>();
             m_isPlayerInAttackArea = true;
+            
         }
     }
 
@@ -219,6 +227,7 @@ public class MonsterBase : MonoBehaviour
         if(other.gameObject.CompareTag("Player"))
         {
             m_isPlayerInAttackArea = false;
+            playerHp =null;
         }
     }
 
@@ -227,18 +236,9 @@ public class MonsterBase : MonoBehaviour
     {
         if(collision.gameObject.CompareTag("Player"))
         {
-            //플레이어가 존재할 경우-> 몸박 데미지 만큼 피해를 입게 함.
-            // if(player!=null)
-            // {
-            //     player.TakeDamage(collsionDamage);
-            // }
-            //플레이어가 몬스터에게 몸박 데미지 아이템을 갖고 있는 경우
-            // if(player.canBodyAttack)
-            // {
-                // TakeDamage(player.atk);
-                TakeDamage(10);
-                Debug.Log("데미지 입음");
-            // }
+            //플레이어가 몬스터와 충돌할 경우-> 플레이어가 몸박 데미지 만큼 피해를 입게 함.
+            playerHp = collision.gameObject.GetComponent<PlayerHp>();
+            playerHp.TakeDamage(m_collsionDamage);
         }
     }
 

@@ -165,8 +165,9 @@ GameObject:
   - component: {fileID: 86260541}
   - component: {fileID: 86260540}
   - component: {fileID: 86260539}
+  - component: {fileID: 86260543}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -258,6 +259,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &86260543
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 86260538}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c22fa9a3c1788847b5e39a627ecca0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_CurrentHealth: 5
+  m_MaxHealth: 5
+  m_LimitMaxHealth: 10
 --- !u!1 &224625109
 GameObject:
   m_ObjectHideFlags: 0
@@ -440,15 +456,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86e0aebe20585413499292a7846ba54b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerPos: {fileID: 86260542}
-  spawnTime: 0.2
-  patternTime: 5
-  straightMonsterPrefabs:
+  m_playerPos: {fileID: 86260542}
+  m_spawnTime: 0.2
+  m_patternTime: 5
+  m_straightMonsterPrefabs:
   - {fileID: 7745300230697871013, guid: 5ef42956b4e45400abb2633c2fb1ee61, type: 3}
-  - {fileID: 7745300230697871013, guid: 5ef42956b4e45400abb2633c2fb1ee61, type: 3}
-  - {fileID: 7745300230697871013, guid: 5ef42956b4e45400abb2633c2fb1ee61, type: 3}
-  - {fileID: 7745300230697871013, guid: 5ef42956b4e45400abb2633c2fb1ee61, type: 3}
-  spawnRange: 20
+  m_spawnRange: 10
 --- !u!1 &538086069
 GameObject:
   m_ObjectHideFlags: 0
@@ -739,10 +752,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d689b583697e427aa7897798f3e5909, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabs:
+  m_prefabs:
   - {fileID: 3161129422670007100, guid: 0bb623b00041d40adb1d4900c8c78996, type: 3}
   - {fileID: 7425997435929176841, guid: cd74fac6dc2cc495c802f7b794d820d4, type: 3}
-  poolSize: 5
+  - {fileID: 944514543498036531, guid: f27e48f6327094753b4bfe2b5bd8dbf4, type: 3}
+  m_poolSize: 5
 --- !u!4 &1027133649
 Transform:
   m_ObjectHideFlags: 0

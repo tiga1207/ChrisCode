@@ -1698,19 +1698,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d93219150466640f3800be464b273287, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hp: 10
-  maxHp: 10
-  attackDamage: 2
-  collsionDamage: 1
-  attackCooldown: 1
-  canAttack: 1
-  isPlayerInAttackArea: 0
-  sphereCollider: {fileID: 8207372480859528588}
-  attackRange: 0.3
-  moveSpeed: 2
+  m_hp: 10
+  m_maxHp: 10
+  m_attackDamage: 2
+  m_collsionDamage: 1
+  m_attackCooldown: 1
+  m_canAttack: 1
+  m_isPlayerInAttackArea: 0
+  m_sphereCollider: {fileID: 8207372480859528588}
+  m_attackRange: 2
+  m_moveSpeed: 3
   monsterType: 0
-  playerPos: {fileID: 0}
-  canTrackingPlayer: 1
+  m_playerPos: {fileID: 0}
+  m_canTrackingPlayer: 1
+  playerHp: {fileID: 0}
 --- !u!54 &896150774526458834
 Rigidbody:
   m_ObjectHideFlags: 0
