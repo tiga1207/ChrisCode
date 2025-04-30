@@ -4,38 +4,38 @@ using UnityEngine;
 
 public class MonsterPoolManager : MonoBehaviour
 {
-    public static MonsterPoolManager instance;
-    [SerializeField] private GameObject[] prefabs;
-    private List<GameObject>[] pools;
-    [SerializeField] private int poolSize = 5;
+    public static MonsterPoolManager s_instance;
+    [SerializeField] private GameObject[] m_prefabs;
+    [SerializeField] private int m_poolSize = 5;
+    private List<GameObject>[] m_pools;
 
     private void Awake()
     {
-        if(instance == null)
+        if(s_instance == null)
         {
-            instance = this;
+            s_instance = this;
             DontDestroyOnLoad(gameObject);
         }   
         else
         {
             Destroy(gameObject);
         }
-        Init();
+        InitPools();
     }
 
-    void Init()
+    void InitPools()
     {
-        pools = new List<GameObject>[prefabs.Length];
+        m_pools = new List<GameObject>[m_prefabs.Length];
 
-        for(int i = 0; i<prefabs.Length ; i++)
+        for(int i = 0; i<m_prefabs.Length ; i++)
         {
-            pools[i] = new List<GameObject>();
+            m_pools[i] = new List<GameObject>();
 
-            for(int j = 0; j<  poolSize; j++)
+            for(int j = 0; j<  m_poolSize; j++)
             {
-                GameObject monster = Instantiate(prefabs[i]);
+                GameObject monster = Instantiate(m_prefabs[i]);
                 monster.SetActive(false);
-                pools[i].Add(monster);
+                m_pools[i].Add(monster);
             }
         }
     }
@@ -43,7 +43,7 @@ public class MonsterPoolManager : MonoBehaviour
     {
         int index = (int)type;
 
-        foreach(var mon in pools[index])
+        foreach(var mon in m_pools[index])
         {
             if(!mon.activeSelf)
             {
@@ -52,8 +52,8 @@ public class MonsterPoolManager : MonoBehaviour
             }
         }
 
-        GameObject newMon = Instantiate(prefabs[index]);
-        pools[index].Add(newMon);
+        GameObject newMon = Instantiate(m_prefabs[index]);
+        m_pools[index].Add(newMon);
         return newMon;
     }
 
