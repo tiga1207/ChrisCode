@@ -44,7 +44,9 @@ namespace Scripts.Manager
         {
             return this.gameObject;
         }
-        public void UpdateManager()
+
+        // Unity
+        public void Update()
         {
             // check
             CheckFirstFrame();

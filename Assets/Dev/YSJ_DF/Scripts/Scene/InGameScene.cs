@@ -1,4 +1,7 @@
+using Scripts.Interface;
 using Scripts.Manager;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace Scripts.Scene
 {
@@ -9,12 +12,10 @@ namespace Scripts.Scene
         public override void Initialize()
         {
             base.Initialize();
-            ManagerGroup.Instance.RegisterManager(InGameManager.Instance);
-            ManagerGroup.Instance.RegisterManager(AudioManager.Instance);
-        }
+            GameObject[] SubscribeManagers = GameObject.FindGameObjectsWithTag("Manager");
 
-        private void Start()
-        {
+            ManagerGroup.Instance.RegisterManager(SubscribeManagers);
+            ManagerGroup.Instance.InitializeManagers();
         }
     }
 }
