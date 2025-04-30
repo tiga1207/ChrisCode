@@ -28,43 +28,48 @@ namespace Scripts
             }
         }
 
-        private bool _isManagersInit = false;
-
         private List<IManager> _managers = new List<IManager>();
 
+        // Register
         public void RegisterManager(IManager manager)
         {
-            if (!_managers.Contains(manager))
-            {
-                _managers.Add(manager);
-                var go = manager.GetGameObject();
-                go.transform.parent = this.transform;
-            }
+            GameObject go = manager.GetGameObject();
+
+            _managers.Add(manager);
+            go.transform.parent = this.transform;
         }
+        public void RegisterManager(GameObject manager)
+        {
+            IManager cmp = manager.GetComponent<IManager>();
+
+            if (cmp != null)
+                RegisterManager(cmp);
+        }
+
+        public void RegisterManager(params IManager[] manager)
+        {
+            foreach (IManager go in manager)
+                RegisterManager(go);
+        }
+        public void RegisterManager(params GameObject[] manager)
+        {
+            foreach (GameObject go in manager)
+                RegisterManager(go);
+        }
+
 
         public void InitializeManagers()
         {
             foreach (var manager in _managers)
             {
                 manager.Initialize();
+                manager.GetGameObject().transform.parent = this.transform;
             }
-
-            _isManagersInit = true;
         }
-
         public void CleanupManagers()
         {
             foreach (var manager in _managers)
-            {
                 manager.Cleanup();
-            }
-
-            _isManagersInit = false;
-        }
-
-        private void Update()
-        {
-            
         }
     }
 }
