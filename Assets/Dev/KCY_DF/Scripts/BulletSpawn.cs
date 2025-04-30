@@ -1,0 +1,71 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class BulletSpawn : MonoBehaviour
+{
+    // 오브젝트 저장 풀
+    private static List<BulletSpawn> pool = new List<BulletSpawn>();
+    
+    // 사용자 총알 위치 (위치에 따라 사라지게 함)
+    private Vector3 bulletPos;
+
+    // 다음의 경우 게임 맵을 확인하고 변경한다.
+    [SerializeField]private float maxDistance = 10f;
+
+
+    // 탄환 풀에서 꺼내기 및 새로 생성하기   
+    public static BulletSpawn Spawn(BulletSpawn prefab, Vector3 pos, Quaternion rot)
+    {
+        // 실제 날라가는 플레이어 탄환
+        BulletSpawn instance;  
+
+        if (pool.Count > 0)
+        {
+            instance = pool[pool.Count - 1];
+            pool.RemoveAt(pool.Count - 1);
+        }
+        else 
+        {
+            instance = Instantiate(prefab);
+        }
+
+        instance.transform.position = pos;  //  발사 위치와 발사 회전 정도를 바꾸기
+        instance.transform.rotation = rot;
+        instance.gameObject.SetActive(true);
+
+        return instance;
+    }
+
+    // 오브젝트 비활성화 및 탄환 반환
+    private void ReturnPool()
+    {
+        gameObject.SetActive(false);
+        pool.Add(this);
+    }
+
+
+    private void OnEnable()
+    {
+        bulletPos = transform.position; // 발사 위치를 새로 구사하기
+    }
+    private void Update()
+    {
+
+        //  일정 거리 이상 떨어질 때 탄 없에기
+        if (Vector3.Distance(bulletPos, transform.position) > maxDistance)
+        {
+            ReturnPool();
+        }
+    }
+
+    //  몬스터와 부딪히는 경우 탄 없애기
+    private void OnTriggerEnter(Collider monster)
+    {
+        if (monster.CompareTag("Monster"))
+        {
+            ReturnPool();
+        }
+    }
+
+}

@@ -24,7 +24,7 @@ public class PlayerHp : MonoBehaviour
     }
 
     // 플레이어 데미지 계산
-    private void TakeDamage(int damage)
+    public void TakeDamage(int damage)
     {
         if (m_IsUntouchable == true)
         {
@@ -41,29 +41,38 @@ public class PlayerHp : MonoBehaviour
     }
 
     // 플레이어 체력 회복 시 호출
-    private void IncreasePlayerCurrentHealth(int amount)
+    /*
+    public void IncreasePlayerCurrentHealth(int amount)
     {
         // 체력 상자와의 충돌, 상점, 게임 이벤트에서 체력 회복 이벤트가 있을 경우 호출
         // 괄호
         m_CurrentHealth = Mathf.Min(m_CurrentHealth + 1, m_MaxHealth);
         m_CurrentHealth = m_MaxHealth;
     }
+    */
+
+    public void Heal(int amount)
+    {
+        m_CurrentHealth = Mathf.Min(m_CurrentHealth + amount, m_MaxHealth);
+        Debug.Log($"체력 회복: +{amount}, 현재 체력: {m_CurrentHealth}/{m_MaxHealth}");
+    }
+
 
     // 최대 체력 상승 및 상한체력으로 제한
-    private void IncreasePlayerMaxHealth(int amount)
+    public void IncreasePlayerMaxHealth(int amount)
     {
         m_MaxHealth = Mathf.Min(m_MaxHealth + amount, m_LimitMaxHealth);
     }
 
     // 몬스터 충돌 시 피해를 줄 수 있는 아이템을 소지할 겨우 
-    private void canBodyAttack()
+    public void canBodyAttack()
     {
         // 공격 구현 후 만들기
         //playerAttack.
     }
 
     // 플레이어 피격 시 일정시간 무적 패턴
-    private IEnumerator UntouchableTime()
+    public IEnumerator UntouchableTime()
     {
         m_IsUntouchable = true;
         yield return new WaitForSeconds(m_UntouchableTime);
