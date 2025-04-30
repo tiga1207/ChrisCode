@@ -41,6 +41,7 @@ public class MonsterBase : MonoBehaviour
     //기타 스탯들 ~~~
     [Header("Status Etc")] 
     [SerializeField] protected float m_moveSpeed;
+    [SerializeField] protected bool m_isMove = false;
     public MonsterType monsterType;
 
     [Header("Tracking")]
@@ -146,6 +147,7 @@ public class MonsterBase : MonoBehaviour
         Vector3 targetPos = new Vector3(m_playerPos.transform.position.x, transform.position.y, m_playerPos.transform.position.z);
         transform.position = Vector3.MoveTowards(transform.position, targetPos, m_moveSpeed * Time.deltaTime);
         transform.LookAt(targetPos);
+        m_isMove = true;
     }
 
     protected virtual void LookPlayer()
@@ -153,6 +155,7 @@ public class MonsterBase : MonoBehaviour
         if(m_playerPos == null) return;
         Vector3 targetPos = new Vector3(m_playerPos.transform.position.x, transform.position.y, m_playerPos.transform.position.z);
         transform.LookAt(targetPos);
+        m_isMove=false;
     }
 
     //플레이어 사망 이벤트
@@ -194,7 +197,7 @@ public class MonsterBase : MonoBehaviour
             // {
             //     player.TakeDamage(attackDamage);
             // }
-            playerHp.TakeDamage(m_collsionDamage);
+            // playerHp.TakeDamage(m_collsionDamage);
             Debug.Log($"{gameObject.name}이 플레이어에게 데미지를 입힘");
 
             //공격 이펙트 오브젝트 풀 패턴
@@ -238,7 +241,7 @@ public class MonsterBase : MonoBehaviour
         {
             //플레이어가 몬스터와 충돌할 경우-> 플레이어가 몸박 데미지 만큼 피해를 입게 함.
             playerHp = collision.gameObject.GetComponent<PlayerHp>();
-            playerHp.TakeDamage(m_collsionDamage);
+            // playerHp.TakeDamage(m_collsionDamage);
         }
     }
 
@@ -250,6 +253,11 @@ public class MonsterBase : MonoBehaviour
     private void MonsterDied()
     {
         MonsterPoolManager.s_instance.ReturnPool(this);
+    }
+
+    protected virtual void PatternMonsterDie()
+    {
+        Destroy(gameObject);
     }
     #endregion
 }
