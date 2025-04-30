@@ -4,28 +4,27 @@ using UnityEngine;
 
 public class StraightPatternMonster : MonsterBase
 {
-    private Vector3 dir;
-    [SerializeField]private float timer =10f;
+    private Vector3 m_direction;
+    [SerializeField]private float m_timer =10f;
 
     protected override void Start()
     {
         base.Start();
-        canTrackingPlayer = false;
+        m_canTrackingPlayer = false;
     }
-    public void InitDir(Vector3 direction)
+    public void InitDir(Vector3 targetDir)
     {
-        Vector3 targetPos = new Vector3(direction.x, transform.position.y,direction.z);;
+        Vector3 targetPos = new Vector3(targetDir.x, transform.position.y,targetDir.z);;
         transform.LookAt(targetPos);
-        dir = transform.forward;
+        m_direction = transform.forward;
     }
     protected override void Update()
     {
-        transform.position += dir * moveSpeed * Time.deltaTime;
-        timer -= Time.deltaTime;
-        if(timer <= 0)
+        transform.position += m_direction * m_moveSpeed * Time.deltaTime;
+        m_timer -= Time.deltaTime;
+        if(m_timer <= 0)
         {
-            Destroy(gameObject);
-            Debug.Log("파괴");
+            PatternMonsterDie();
         }
     }
 }
