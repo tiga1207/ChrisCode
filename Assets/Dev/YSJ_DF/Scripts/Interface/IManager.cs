@@ -7,8 +7,6 @@ namespace Scripts.Interface
         void Initialize();
         void Cleanup();
         GameObject GetGameObject();
-
-        void UpdateManager();
     }
 }
 
