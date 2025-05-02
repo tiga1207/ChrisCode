@@ -12,6 +12,11 @@ public class PlayerAttack : MonoBehaviour
     public int attackPower = 1;
     public int attackSpeed = 1;
     public BulletSpawn bulletPerfab;
+    public int extraProjectileCount = 0;          // 추가 발사체 수
+    public int pierceCount = 0;                           // 몬스터 관통 가능 횟수
+    public float projectileSizeMultiplier = 1f;  // 발사체 크기 배율
+    public float explosionRadius = 0f;              // 폭발 반경
+
 
     private float attackTimer;
     public Transform attackPoint;  // 공격이 나갈 위치
