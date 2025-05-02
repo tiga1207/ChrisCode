@@ -38,11 +38,15 @@ public class MonsterBase : MonoBehaviour
     [SerializeField] protected float m_attackRange =2f;
 
 
-    //기타 스탯들 ~~~
-    [Header("Status Etc")] 
-    [SerializeField] protected float m_moveSpeed;
-    [SerializeField] protected bool m_isMove = false;
+    //기타 정보들 ~~~
+    [Header("Status Info")] 
+    [SerializeField] protected Rigidbody m_rb;
+    [SerializeField] protected float m_moveSpeed =3f;
+    // [SerializeField] protected bool m_isMove = false;
     public MonsterType monsterType;
+    [SerializeField] protected bool m_isMonsterDie = false;
+    [SerializeField] private float speed;
+    public bool isPool=false;
 
     [Header("Tracking")]
     [SerializeField]private Transform m_playerPos;
@@ -54,6 +58,8 @@ public class MonsterBase : MonoBehaviour
     //플레이어 체력
     [SerializeField] private PlayerHp playerHp;
 
+    [Header("애니메이션")]
+    [SerializeField] protected Animator anim;
 
     /*AI 및 추적 로직
     지속적 스폰
@@ -78,14 +84,21 @@ public class MonsterBase : MonoBehaviour
         }
         m_isPlayerInAttackArea = false;
         m_canAttack=true;
+
         
         //TODO<김승태> - 플레이어 죽음 이벤트 해제 필요 - 20250430
         //player.OnPlayerDied.RemoveListener(HandlePlayerDied);
         
     }
+    protected virtual void Awake()
+    {
+        m_rb= GetComponent<Rigidbody>();    
+        anim= GetComponent<Animator>();
+    }
 
     protected virtual void Start()
     {
+       
         //씬 내의 플레이어 태그를 가진 오브젝트 1개를 찾기. (플레이어 2개시 해당 라인 변경 바람.)
         FindingPlayer();
         if(m_sphereCollider !=null)
@@ -96,8 +109,9 @@ public class MonsterBase : MonoBehaviour
 
     protected virtual void Update()
     {
+        MonsterAnimationController();
         // 플레이어 객체 
-        if(m_playerPos  == null) return;
+        if(m_playerPos  == null || m_isMonsterDie == true) return;
             
         //공격범위 내에 있을 경우 플레이어를 바라보면서 공격, 아닐 경우 플레이어 위치 추척하며 이동
         if(m_canTrackingPlayer == true) // 플레이어를 추적하는 몬스터의 경우만.
@@ -105,10 +119,12 @@ public class MonsterBase : MonoBehaviour
             if(m_isPlayerInAttackArea == false)
             {
                 MoveToPlayer();
+                Debug.Log("움직이기");
             }
             else
             {
                 LookPlayer();
+                Debug.Log("바라보기");
             }
         }
 
@@ -121,13 +137,24 @@ public class MonsterBase : MonoBehaviour
                 m_attackCoroutine = StartCoroutine(IE_AttackCooldown());
             }
         }
+
     }
 
     protected virtual void InitStatus()
     {
+        //애니메이션 상태 초기화
+        m_isMonsterDie = false;
+
+        //리지드 바디 초기화
+        m_rb.constraints &= ~RigidbodyConstraints.FreezeRotationY; //y축 회전 문제 없애기
+        m_rb.isKinematic = false;
+
+        //스텟 및 상태 초기화
         m_hp = m_maxHp;
         m_isPlayerInAttackArea = false;
         m_canAttack= true;
+        
+
     }
     protected virtual void FindingPlayer()
     {
@@ -144,10 +171,16 @@ public class MonsterBase : MonoBehaviour
     protected virtual void MoveToPlayer()
     {
         if(m_playerPos == null) return;
-        Vector3 targetPos = new Vector3(m_playerPos.transform.position.x, transform.position.y, m_playerPos.transform.position.z);
-        transform.position = Vector3.MoveTowards(transform.position, targetPos, m_moveSpeed * Time.deltaTime);
-        transform.LookAt(targetPos);
-        m_isMove = true;
+        // Vector3 targetPos = new Vector3(m_playerPos.transform.position.x, transform.position.y, m_playerPos.transform.position.z);
+        // transform.position = Vector3.MoveTowards(transform.position, targetPos, m_moveSpeed * Time.deltaTime);
+        // transform.LookAt(targetPos);
+        Vector3 direction = (m_playerPos.transform.position - transform.position).normalized;
+        Vector3 velocity = direction * m_moveSpeed;
+
+        m_rb.velocity = new Vector3(velocity.x, m_rb.velocity.y, velocity.z);
+        transform.LookAt(new Vector3 (m_playerPos.position.x,transform.position.y,m_playerPos.position.z));
+        Debug.Log("실행");
+        
     }
 
     protected virtual void LookPlayer()
@@ -155,7 +188,6 @@ public class MonsterBase : MonoBehaviour
         if(m_playerPos == null) return;
         Vector3 targetPos = new Vector3(m_playerPos.transform.position.x, transform.position.y, m_playerPos.transform.position.z);
         transform.LookAt(targetPos);
-        m_isMove=false;
     }
 
     //플레이어 사망 이벤트
@@ -175,6 +207,8 @@ public class MonsterBase : MonoBehaviour
     // 피해 받는 로직
     public void TakeDamage(int damage)
     {
+        if(m_isMonsterDie == true) return;
+
         m_hp -= damage;
         m_hp = Mathf.Clamp(m_hp, 0, m_maxHp);
         
@@ -182,11 +216,31 @@ public class MonsterBase : MonoBehaviour
         
         if(m_hp <=0)
         {
+            Debug.Log("몬스터 사망");
             MonsterDied();
+            return;
         }
 
+        //피격 상태에서 피격상태가 아님에도 
+        if(anim.GetCurrentAnimatorStateInfo(0).IsName("Move"))
+        {
+            anim.SetTrigger("isHit");
+        }
     }
-    //공격 로직
+
+    //몸박 로직
+    private void OnCollisionStay(Collision collision)
+    {
+        if(collision.gameObject.CompareTag("Player")&& m_isMonsterDie == false)
+        {
+            //플레이어가 몬스터와 충돌할 경우-> 플레이어가 몸박 데미지 만큼 피해를 입게 함.
+            playerHp = collision.gameObject.GetComponent<PlayerHp>();
+            playerHp.TakeDamage(m_collsionDamage);
+
+            TakeDamage(1);
+        }
+    }
+    //공격 로직: sphere 트리거를 이용해 공격 범위를 설정.
     protected virtual void AttackPlayer()
     {
         if(m_playerPos != null)
@@ -234,30 +288,43 @@ public class MonsterBase : MonoBehaviour
         }
     }
 
-    //몸박 로직
-    private void OnCollisionEnter(Collision collision)
-    {
-        if(collision.gameObject.CompareTag("Player"))
-        {
-            //플레이어가 몬스터와 충돌할 경우-> 플레이어가 몸박 데미지 만큼 피해를 입게 함.
-            playerHp = collision.gameObject.GetComponent<PlayerHp>();
-            // playerHp.TakeDamage(m_collsionDamage);
-        }
-    }
+    
 
 
     #endregion
 
     #region 몬스터 생성 및 사망 로직
     //몬스터 사망 로직
-    private void MonsterDied()
+    protected virtual void MonsterDied() 
     {
-        MonsterPoolManager.s_instance.ReturnPool(this);
+        m_isMonsterDie = true;
+        m_rb.freezeRotation = true; //프리징
+        m_rb.isKinematic = true;
     }
 
-    protected virtual void PatternMonsterDie()
+    // monster Die Animation Clip의 마지막 프레임에 호출
+    protected virtual void ReturnPoolOrDestory()
     {
-        Destroy(gameObject);
+        if(isPool == true)
+        {
+            Debug.Log($"{gameObject.name} 풀 반납");
+            MonsterPoolManager.s_instance.ReturnPool(this);
+        }
+        else
+        {
+            Debug.Log($"{gameObject.name} 파괴");
+
+            Destroy(gameObject);
+        }
+    }
+    #endregion
+    #region 몬스터 애니메이션 관리
+
+    protected virtual void MonsterAnimationController()
+    {
+        speed = m_rb.velocity.magnitude;
+        anim.SetFloat("Speed",speed,0.2f,Time.deltaTime);
+        anim.SetBool("isMonsterDie", m_isMonsterDie);
     }
     #endregion
 }

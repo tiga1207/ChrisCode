@@ -3659,10 +3659,10 @@ Animator:
   m_GameObject: {fileID: 7425997435929176841}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: b69174d668ba02d44b14a084b217670a, type: 3}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: ecedf3d70aa0d4a56ad93808aac47408, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
-  m_ApplyRootMotion: 1
+  m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_WarningMessage: 
@@ -3691,11 +3691,16 @@ MonoBehaviour:
   m_isPlayerInAttackArea: 0
   m_sphereCollider: {fileID: 4257959634729531231}
   m_attackRange: 2
+  m_rb: {fileID: 0}
   m_moveSpeed: 3
+  m_isMove: 0
   monsterType: 1
+  m_isMonsterDie: 0
+  speed: 0
   m_playerPos: {fileID: 0}
   m_canTrackingPlayer: 1
   playerHp: {fileID: 0}
+  anim: {fileID: 0}
 --- !u!54 &2876877853764780653
 Rigidbody:
   m_ObjectHideFlags: 0
