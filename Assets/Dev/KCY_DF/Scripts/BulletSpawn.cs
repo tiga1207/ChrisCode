@@ -1,9 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class BulletSpawn : MonoBehaviour
 {
+    //탄속
+    public float bulletSpeed = 10f;
+
+    // 총발 방향계산
+    private Vector3 bulletDir;
+
+
     // 오브젝트 저장 풀
     private static List<BulletSpawn> pool = new List<BulletSpawn>();
     
@@ -44,13 +52,25 @@ public class BulletSpawn : MonoBehaviour
         pool.Add(this);
     }
 
+    // 탄환 방향 설정
+    public void BulletStartDirection(Vector3 dir)
+    {
+        bulletDir = dir.normalized;
+    }
+   
+
+
 
     private void OnEnable()
     {
-        bulletPos = transform.position; // 발사 위치를 새로 구사하기
+        bulletPos = transform.position; // 발사 시점 위치 저장
     }
     private void Update()
     {
+
+        //  탄속 설정
+        transform.position += bulletDir * bulletSpeed * Time.deltaTime;
+
 
         //  일정 거리 이상 떨어질 때 탄 없에기
         if (Vector3.Distance(bulletPos, transform.position) > maxDistance)
