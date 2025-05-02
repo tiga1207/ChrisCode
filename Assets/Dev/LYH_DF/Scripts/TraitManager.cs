@@ -84,7 +84,7 @@ public class TraitManager : MonoBehaviour
                 {
                     if (playerAttack != null && CanUpgrade(TraitType.ExtraProjectile, value))
                     {
-                        playerAttack.extraProjectile += Mathf.RoundToInt(value); // 추후 구현 필요
+                        playerAttack.extraProjectileCount += Mathf.RoundToInt(value); // 추후 구현 필요
                         Debug.Log("[추가발사체] +" + value);
                     }
                 }

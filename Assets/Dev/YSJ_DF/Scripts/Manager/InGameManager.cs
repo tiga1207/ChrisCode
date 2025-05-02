@@ -98,7 +98,7 @@ namespace Scripts.Manager
                 return;
 
             // Checking
-            if (_playerHpCmp.m_CurrentHealth <= 0)
+            if (_playerHpCmp.CurrentHealth <= 0)
                 _resultState = GameResultState.Fail;
             else if (_inGameClearTime <= _inGameCurrenttTime)
                 _resultState = GameResultState.Clear;
