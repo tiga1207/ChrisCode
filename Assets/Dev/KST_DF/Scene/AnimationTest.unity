@@ -152,8 +152,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_playerPos: {fileID: 923908112}
-  m_spawnTime: 10000
-  m_patternTime: 1
+  m_spawnTime: 1
+  m_patternTime: 1000
   m_straightMonsterPrefabs:
   - {fileID: 7745300230697871013, guid: 5ef42956b4e45400abb2633c2fb1ee61, type: 3}
   m_spawnRange: 12.35

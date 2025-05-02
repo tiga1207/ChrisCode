@@ -3693,10 +3693,10 @@ MonoBehaviour:
   m_attackRange: 2
   m_rb: {fileID: 0}
   m_moveSpeed: 3
-  m_isMove: 0
   monsterType: 1
   m_isMonsterDie: 0
   speed: 0
+  isPool: 1
   m_playerPos: {fileID: 0}
   m_canTrackingPlayer: 1
   playerHp: {fileID: 0}
