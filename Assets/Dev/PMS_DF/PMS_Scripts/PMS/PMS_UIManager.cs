@@ -163,6 +163,5 @@ public class PMS_UIManager : MonoBehaviour
         _panelStack.Push(newPanel);
         newPanel.Show();
     }
-
-
+    
 }
