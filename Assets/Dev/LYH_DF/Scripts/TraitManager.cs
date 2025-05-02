@@ -70,6 +70,51 @@ public class TraitManager : MonoBehaviour
                         Debug.Log($"공격속도 증가! {value}배 적용! 현재 속도 : {playerAttack.AttackSpeed}");
                     }                    
                 }
+            },
+
+            {
+                TraitType.ExtraProjectile, (value) =>
+                {
+                    if (playerAttack != null)
+                    {
+                        int count = Mathf.RoundToInt(value);
+                        //playerAttack.extraProjectileCount += count;
+                        Debug.Log($"추가 발사체 획득! +{value}");
+                    }
+                }
+            },
+
+            {
+                TraitType.ProjectileSize, (value) =>
+                {
+                    if (playerAttack != null)
+                    {
+                        //playerAttack.projectileSizeMultiplier *= value; //추후 팀원 작업 필요
+                        Debug.Log($"발사체 크기 증가! x{value}");
+                    }
+                }
+            },
+
+            {
+                TraitType.Pierce, (value) =>
+                {
+                    if (playerAttack != null)
+                    {
+                        int pierce = Mathf.RoundToInt(value);
+                        //playerAttack.pierceCount += pierce; //추후 팀원 작업필요
+                        Debug.Log($"관통력 획득! +{value}");
+                    }
+                }
+            },
+
+            {
+                TraitType.CooldownReduction, (value) =>
+                {
+                    if (playerAttack != null)
+                    {
+
+                    }
+                }
             }
         };
     }
