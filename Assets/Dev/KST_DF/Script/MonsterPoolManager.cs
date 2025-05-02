@@ -48,6 +48,7 @@ public class MonsterPoolManager : MonoBehaviour
             if(!mon.activeSelf)
             {
                 mon.SetActive(true);
+                mon.GetComponent<MonsterBase>().isPool = true; // 추후 논의 후 태그를 pooled로 바꾸는 것도 검토 필요.
                 return mon;
             }
         }
