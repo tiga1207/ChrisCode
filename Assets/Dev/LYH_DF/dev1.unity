@@ -512,9 +512,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c22fa9a3c1788847b5e39a627ecca0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CurrentHealth: 5
-  MaxHealth: 5
-  LimitMaxHealth: 10
+  m_CurrentHealth: 5
+  m_MaxHealth: 5
+  m_LimitMaxHealth: 10
 --- !u!1 &1064547861
 GameObject:
   m_ObjectHideFlags: 0
@@ -883,14 +883,17 @@ MonoBehaviour:
     description: "\uD50C\uB808\uC774\uC5B4 \uC774\uB3D9\uC18D\uB3C4\uAC00 10% \uBE68\uB77C\uC9D0"
     type: 0
     value: 1.1
+    allowMultiple: 1
   - traitName: "\uCD5C\uB300\uCCB4\uB825 \uC99D\uAC00"
     description: "\uCD5C\uB300\uCCB4\uB825\uC774 20% \uC99D\uAC00\uD568"
     type: 1
     value: 1.2
+    allowMultiple: 1
   - traitName: "\uACF5\uACA9\uC18D\uB3C4 \uC99D\uAC00"
     description: "\uACF5\uACA9\uC18D\uB3C4\uAC00 10% \uBE68\uB77C\uC9D0"
     type: 3
     value: 1.1
+    allowMultiple: 1
 --- !u!4 &1293685147
 Transform:
   m_ObjectHideFlags: 0
@@ -1327,27 +1330,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02317ed5bfa4daa4f83d1bd3925f4b08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  acquiredTraits:
-  - traitName: "\uC774\uB3D9\uC18D\uB3C4 \uC99D\uAC00"
-    description: "\uC774\uB3D9\uC18D\uB3C4\uAC00 10% \uC99D\uAC00"
-    type: 0
-    value: 1.1
-  - traitName: "\uCD5C\uB300 \uCCB4\uB825 \uC99D\uAC00"
-    description: "\uCD5C\uB300 \uCCB4\uB825\uC774 20% \uC99D\uAC00"
-    type: 1
-    value: 1.2
-  - traitName: "\uC774\uB3D9\uC18D\uB3C4 \uB300\uD3ED \uC99D\uAC00"
-    description: "\uC774\uB3D9\uC18D\uB3C4 20%\uC99D\uAC00"
-    type: 0
-    value: 1.2
-  - traitName: "\uCCB4\uB825 \uB300\uD3ED \uC99D\uAC00"
-    description: "\uCD5C\uB300 \uCCB4\uB825 50% \uC99D\uAC00"
-    type: 1
-    value: 1.5
-  - traitName: "\uACE0\uC18D \uC774\uB3D9"
-    description: "\uC774\uB3D9\uC18D\uB3C4 50% \uC99D\uAC00"
-    type: 0
-    value: 1.5
 --- !u!1 &1919785843
 GameObject:
   m_ObjectHideFlags: 0

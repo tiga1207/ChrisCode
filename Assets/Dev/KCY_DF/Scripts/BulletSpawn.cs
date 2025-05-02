@@ -1,31 +1,41 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class BulletSpawn : MonoBehaviour
 {
+    //탄속
+    public float bulletSpeed = 10f;
+
+    // 총발 방향계산
+    private Vector3 bulletDir;
+
+    public int attackPower;
+
+
     // 오브젝트 저장 풀
     private static List<BulletSpawn> pool = new List<BulletSpawn>();
-    
+
     // 사용자 총알 위치 (위치에 따라 사라지게 함)
     private Vector3 bulletPos;
 
     // 다음의 경우 게임 맵을 확인하고 변경한다.
-    [SerializeField]private float maxDistance = 10f;
+    [SerializeField] private float maxDistance = 10f;
 
 
     // 탄환 풀에서 꺼내기 및 새로 생성하기   
     public static BulletSpawn Spawn(BulletSpawn prefab, Vector3 pos, Quaternion rot)
     {
         // 실제 날라가는 플레이어 탄환
-        BulletSpawn instance;  
+        BulletSpawn instance;
 
         if (pool.Count > 0)
         {
             instance = pool[pool.Count - 1];
             pool.RemoveAt(pool.Count - 1);
         }
-        else 
+        else
         {
             instance = Instantiate(prefab);
         }
@@ -44,13 +54,25 @@ public class BulletSpawn : MonoBehaviour
         pool.Add(this);
     }
 
+    // 탄환 방향 설정
+    public void BulletStartDirection(Vector3 dir)
+    {
+        bulletDir = dir.normalized;
+    }
+
+
+
 
     private void OnEnable()
     {
-        bulletPos = transform.position; // 발사 위치를 새로 구사하기
+        bulletPos = transform.position; // 발사 시점 위치 저장
     }
     private void Update()
     {
+
+        //  탄속 설정
+        transform.position += bulletDir * bulletSpeed * Time.deltaTime;
+
 
         //  일정 거리 이상 떨어질 때 탄 없에기
         if (Vector3.Distance(bulletPos, transform.position) > maxDistance)
@@ -64,8 +86,16 @@ public class BulletSpawn : MonoBehaviour
     {
         if (monster.CompareTag("Monster"))
         {
+            MonsterBase monsterBase = monster.GetComponent<MonsterBase>();
+
+            if (monsterBase != null)
+            {
+                monsterBase.TakeDamage(attackPower);
+            }
+
             ReturnPool();
         }
-    }
 
+    }
 }
+

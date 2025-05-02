@@ -17,6 +17,5 @@ public enum TraitType
     HealOnKill,       // 적 처치시 체력 회복  
     ExpBoost,         // 경험치 획득량 증가  
     CooldownReduction,  // 스킬 쿨타임 감소
-    HealInkill,       // 몬스터 처치 시 회복
 
 }

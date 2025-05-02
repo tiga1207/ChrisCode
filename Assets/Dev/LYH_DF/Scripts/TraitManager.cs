@@ -12,8 +12,10 @@ public class TraitManager : MonoBehaviour
     private Dictionary<TraitType, System.Action<float>> traitEffects;
     // 쿨타임 체크용 딕셔너리
     private Dictionary<TraitType, float> lastActivatedTime = new Dictionary<TraitType, float>();
-
+    // 현재 플레이어가 보유한 특성 목록
     public Dictionary<TraitType, Trait> acquiredTraits = new Dictionary<TraitType, Trait>();
+
+    private const int MaxUpgradeCount = 3;
 
     private void Start()
     {
@@ -28,54 +30,129 @@ public class TraitManager : MonoBehaviour
     {
         traitEffects = new Dictionary<TraitType, System.Action<float>>
         {
+            // 이동속도 증가
             {
                 TraitType.MoveSpeed, (value) =>
                 {
-                    if (characterMove != null)
+                    if (characterMove != null && CanUpgrade(TraitType.MoveSpeed, value))
                     {
                         characterMove.moveSpeed *= value;
-                        Debug.Log($"이동속도 증가! 현재 이동속도 : {characterMove.moveSpeed}");
+                        Debug.Log("[이동속도] 증가: x" + value);
                     }
                 }
             },
 
+            // 최대 체력 증가
             {
                 TraitType.MaxHealth, (value) =>
                 {
-                    if (playerHP != null)
+                    if (playerHP != null && CanUpgrade(TraitType.MaxHealth, value))
                     {
-                        playerHP.m_MaxHealth = Mathf.RoundToInt(playerHP.m_MaxHealth * value);
-                        Debug.Log($"최대체력 증가! 현재 최대체력 : {playerHP.m_MaxHealth}");
+                        playerHP.MaxHealth = Mathf.RoundToInt(playerHP.MaxHealth * value);
+                        Debug.Log("[최대체력] 증가: x" + value);
                     }
                 }
             },
 
+            // 공격력 증가
             {
                 TraitType.AttackPower, (value) =>
                 {
-                    if (playerAttack != null)
+                    if (playerAttack != null && CanUpgrade(TraitType.AttackPower, value))
                     {
-                        playerAttack.AttackPower *= value;
-                        Debug.Log($"공격력 증가!! {value}배 적용! 현재 공격력 : {playerAttack.AttackPower}");
+                        playerAttack.attackPower *= Mathf.RoundToInt(value);
+                        Debug.Log("[공격력] 증가: x" + value);
                     }
                 }
             },
 
+            // 공격속도 증가
             {
                 TraitType.AttackSpeed, (value) =>
                 {
-                    if (playerAttack != null)
+                    if (playerAttack != null && CanUpgrade(TraitType.AttackSpeed, value))
                     {
-                        playerAttack.AttackSpeed *= value;
-                        Debug.Log($"공격속도 증가! {value}배 적용! 현재 속도 : {playerAttack.AttackSpeed}");
-                    }                    
+                        playerAttack.attackSpeed *= Mathf.RoundToInt(value);
+                        Debug.Log("[공격속도] 증가: x" + value);
+                    }
+                }
+            },
+
+            // 추가 발사체
+            {
+                TraitType.ExtraProjectile, (value) =>
+                {
+                    if (playerAttack != null && CanUpgrade(TraitType.ExtraProjectile, value))
+                    {
+                        playerAttack.extraProjectile += Mathf.RoundToInt(value); // 추후 구현 필요
+                        Debug.Log("[추가발사체] +" + value);
+                    }
+                }
+            },
+
+            // 발사체 크기 증가
+            {
+                TraitType.ProjectileSize, (value) =>
+                {
+                    if (playerAttack != null && CanUpgrade(TraitType.ProjectileSize, value))
+                    {
+                        playerAttack.projectileSizeMultiplier *= value; // 추후 구현 필요
+                        Debug.Log("[발사체크기] 증가: x" + value);
+                    }
+                }
+            },
+
+            // 관통력 증가
+            {
+                TraitType.Pierce, (value) =>
+                {
+                    if (playerAttack != null && CanUpgrade(TraitType.Pierce, value))
+                    {
+                        playerAttack.pierceCount += Mathf.RoundToInt(value); // 추후 구현 필요
+                        Debug.Log("[관통력] +" + value);
+                    }
+                }
+            },
+
+            // 폭발 특성
+            {
+                TraitType.Explosion, (value) =>
+                {
+                    if (playerAttack != null && CanUpgrade(TraitType.Explosion, value))
+                    {
+                        playerAttack.explosionRadius += value; // 추후 구현 필요
+                        Debug.Log("[폭발반경] 증가: +" + value);
+                    }
                 }
             }
         };
     }
 
+    // 업그레이드 가능한지 확인 (최대 3회)
+    private bool CanUpgrade(TraitType type, float addValue)
+    {
+        if (acquiredTraits.TryGetValue(type, out var trait))
+        {
+            int currentLevel = Mathf.RoundToInt(trait.value);
+            int addLevel = Mathf.RoundToInt(addValue);
+            if (currentLevel >= MaxUpgradeCount)
+            {
+                Debug.Log("[업그레이드 제한] " + type + " 이미 최대 강화됨");
+                return false;
+            }
+            return true;
+        }
+        return true;
+    }
+
     public void ApplyTrait(Trait trait)
     {
+        if (!trait.allowMultiple && acquiredTraits.ContainsKey(trait.type))
+        {
+            Debug.Log($"{trait.traitName} 중복 선택 불가");
+            return;
+        }
+
         if (traitEffects.TryGetValue(trait.type, out var effect))
         {
             effect.Invoke(trait.value);
@@ -100,6 +177,8 @@ public class TraitManager : MonoBehaviour
             acquiredTraits[trait.type] = trait;
             Debug.Log($"신규획득 {trait.traitName} 첫 획득");
         }
+
+        
     }
 
     public bool HasTrait(TraitType type, out float value)
@@ -167,5 +246,6 @@ public class TraitManager : MonoBehaviour
             }
         }
     }
+
 
 }
