@@ -48,7 +48,7 @@ public class TraitManager : MonoBehaviour
                 {
                     if (playerHP != null && CanUpgrade(TraitType.MaxHealth, value))
                     {
-                        playerHP.m_MaxHealth = Mathf.RoundToInt(playerHP.m_MaxHealth * value);
+                        playerHP.MaxHealth = Mathf.RoundToInt(playerHP.MaxHealth * value);
                         Debug.Log("[최대체력] 증가: x" + value);
                     }
                 }
@@ -60,7 +60,7 @@ public class TraitManager : MonoBehaviour
                 {
                     if (playerAttack != null && CanUpgrade(TraitType.AttackPower, value))
                     {
-                        playerAttack.AttackPower *= value;
+                        playerAttack.attackPower *= Mathf.RoundToInt(value);
                         Debug.Log("[공격력] 증가: x" + value);
                     }
                 }
@@ -72,7 +72,7 @@ public class TraitManager : MonoBehaviour
                 {
                     if (playerAttack != null && CanUpgrade(TraitType.AttackSpeed, value))
                     {
-                        playerAttack.AttackSpeed *= value;
+                        playerAttack.attackSpeed *= Mathf.RoundToInt(value);
                         Debug.Log("[공격속도] 증가: x" + value);
                     }
                 }
@@ -84,7 +84,7 @@ public class TraitManager : MonoBehaviour
                 {
                     if (playerAttack != null && CanUpgrade(TraitType.ExtraProjectile, value))
                     {
-                        // playerAttack.extraProjectile += Mathf.RoundToInt(value); // 추후 구현 필요
+                        playerAttack.extraProjectile += Mathf.RoundToInt(value); // 추후 구현 필요
                         Debug.Log("[추가발사체] +" + value);
                     }
                 }
@@ -96,7 +96,7 @@ public class TraitManager : MonoBehaviour
                 {
                     if (playerAttack != null && CanUpgrade(TraitType.ProjectileSize, value))
                     {
-                        // playerAttack.projectileSizeMultiplier *= value; // 추후 구현 필요
+                        playerAttack.projectileSizeMultiplier *= value; // 추후 구현 필요
                         Debug.Log("[발사체크기] 증가: x" + value);
                     }
                 }
@@ -108,7 +108,7 @@ public class TraitManager : MonoBehaviour
                 {
                     if (playerAttack != null && CanUpgrade(TraitType.Pierce, value))
                     {
-                        // playerAttack.pierceCount += Mathf.RoundToInt(value); // 추후 구현 필요
+                        playerAttack.pierceCount += Mathf.RoundToInt(value); // 추후 구현 필요
                         Debug.Log("[관통력] +" + value);
                     }
                 }
@@ -120,7 +120,7 @@ public class TraitManager : MonoBehaviour
                 {
                     if (playerAttack != null && CanUpgrade(TraitType.Explosion, value))
                     {
-                        // playerAttack.explosionRadius += value; // 추후 구현 필요
+                        playerAttack.explosionRadius += value; // 추후 구현 필요
                         Debug.Log("[폭발반경] 증가: +" + value);
                     }
                 }
