@@ -5,14 +5,14 @@ using UnityEngine.UI;
 
 public class HUD : MonoBehaviour
 {
-    public enum InfoType { Exp , Level, Kill , Time, Health }
-    public InfoType type;
+    [Header("HUD Elements")]
+    [SerializeField] private Slider expSlider;
+    [SerializeField] private Text levelText;
+    [SerializeField] private Text killText;
+    [SerializeField] private Text timeText;
 
-    Text myText;
-    Slider mySlider;
-
-    //임시 데이터 나중에 게임매니저에서 해당값들을 들고와야함
-    float curExp = 3;  
+    // TODO: 나중에 GameManager에서 받아오도록 연결
+    float curExp = 3;
     float maxExp = 10;
     int level = 999;
     int kill = 100;
@@ -21,45 +21,43 @@ public class HUD : MonoBehaviour
     private float currentTime = 160;
     public float remainTime;
 
-    private void Awake()
-    {
-        myText = GetComponent<Text>();
-        mySlider = GetComponent<Slider>();
-    }
 
+    //TODO - 플레이어의 체력
     private void LateUpdate()
     {
-        switch (type)
+        UpdateExp();
+        UpdateLevel();
+        UpdateKill();
+        UpdateTime();
+    }
+
+    private void UpdateExp()
+    {
+        expSlider.value = curExp / maxExp;
+    }
+
+    private void UpdateLevel()
+    {
+        levelText.text = string.Format("Lv.{0:F0}", level);   
+    }
+
+    private void UpdateKill()
+    {
+        killText.text = string.Format("{0:F0}", kill);
+    }
+
+    private void UpdateTime()
+    {
+        remainTime = maxTime - currentTime;
+        int min = Mathf.FloorToInt(remainTime / 60);
+        int sec = Mathf.FloorToInt(remainTime % 60);
+        if (min >= 0 && sec >= 0)
         {
-            case InfoType.Exp:
-                float curExp = 3;   //TODO - 현재 경험치 가져오기
-                float maxExp = 10;  //TODO - 다음 레벨 경험치 가져오기
-                mySlider.value = curExp / maxExp;
-                break;
-
-            case InfoType.Level:
-                myText.text = string.Format("Lv.{0:F0}", level);    //TODO - 현재 레벨 불러오기
-                break;
-
-            case InfoType.Kill:
-                myText.text = string.Format("{0:F0}", kill);    //TODO - 현재 레벨 불러오기
-                break;
-
-            case InfoType.Time:
-                remainTime = maxTime - currentTime;             //TODO -  값 설정 나중에
-                int min = Mathf.FloorToInt(remainTime / 60);
-                int sec = Mathf.FloorToInt(remainTime % 60);
-                Debug.Log(remainTime);
-                if (min >= 0 && sec >= 0)
-                    myText.text = string.Format("{0:D2}:{1:D2}", min, sec);
-                else
-                {
-                    myText.text = "00:00"; //더이상 시간이 흐르지 않게
-                }
-                break;
-
-            case InfoType.Health:
-                break;
+            string.Format("{0:D2}:{1:D2}", min, sec);
+        }
+        else
+        {
+            timeText.text = "00:00"; //더이상 시간이 흐르지 않게
         }
     }
 }
