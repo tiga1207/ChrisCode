@@ -7,7 +7,7 @@ public class PlayerHp : MonoBehaviour
     public int CurrentHealth = 5;  // 처음 5로 시작
     public int MaxHealth = 5;
     public int LimitMaxHealth = 10;
-    private bool IsUntouchable = false;
+    private bool isUntouchable = false;
     private float untouchableTime = 2f;
 
     private void Awake()
@@ -25,7 +25,7 @@ public class PlayerHp : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-      
+
     }
 
     // 플레이어 데미지 계산
@@ -108,3 +108,4 @@ public class PlayerHp : MonoBehaviour
             }
         }
     }
+}
