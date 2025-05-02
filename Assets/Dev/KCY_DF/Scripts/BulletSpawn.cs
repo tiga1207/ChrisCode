@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class BulletSpawn : MonoBehaviour
 {
+    public int pierceCount = 0;
+    public float explosionRadius = 0f;
+
     //탄속
     public float bulletSpeed = 10f;
 
@@ -62,7 +65,6 @@ public class BulletSpawn : MonoBehaviour
 
 
 
-
     private void OnEnable()
     {
         bulletPos = transform.position; // 발사 시점 위치 저장
@@ -82,20 +84,48 @@ public class BulletSpawn : MonoBehaviour
     }
 
     //  몬스터와 부딪히는 경우 탄 없애기
-    private void OnTriggerEnter(Collider monster)
+    private void OnTriggerEnter(Collider other)
     {
-        if (monster.CompareTag("Monster"))
+        if (other.CompareTag("Monster"))
         {
-            MonsterBase monsterBase = monster.GetComponent<MonsterBase>();
-
+            MonsterBase monsterBase = other.GetComponent<MonsterBase>();
             if (monsterBase != null)
             {
                 monsterBase.TakeDamage(attackPower);
             }
 
+
+            // 폭발 특성
+            if (explosionRadius > 0f)
+            {
+                Collider[] hits = Physics.OverlapSphere(transform.position, explosionRadius);
+                foreach (var hit in hits)
+                {
+                    if (hit.CompareTag("Monster") && hit != other)
+                    {
+                        MonsterBase otherMonster = hit.GetComponent<MonsterBase>();
+                        if (otherMonster != null)
+                        {
+                            otherMonster.TakeDamage(attackPower / 2); // 주변은 절반 피해
+                        }
+                    }
+                }
+            }
+
+            // 관통특성
+            if (pierceCount > 0)
+            {
+                pierceCount--;
+                return; // 관통 남았으므로 탄환 유지
+            }
+
+            ReturnPool(); // 관통 없음 제거
+        }
+        else if (!other.CompareTag("Player"))
+        {
+            // 벽이나 기타 오브젝트에 부딪히면 파괴
             ReturnPool();
         }
-
     }
 }
 

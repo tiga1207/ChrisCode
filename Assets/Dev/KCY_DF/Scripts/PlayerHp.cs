@@ -96,5 +96,15 @@ public class PlayerHp : MonoBehaviour
         return MaxHealth;
     }
 
-}
-
+    public bool IsUntouchable
+    {
+        get => isUntouchable;
+        set
+        {
+            if (value && !isUntouchable)
+            {
+                isUntouchable = true;
+                StartCoroutine(UntouchableTime());
+            }
+        }
+    }
