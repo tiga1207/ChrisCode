@@ -11,29 +11,31 @@ public class BulletSpawn : MonoBehaviour
     // 총발 방향계산
     private Vector3 bulletDir;
 
+    public int attackPower;
+
 
     // 오브젝트 저장 풀
     private static List<BulletSpawn> pool = new List<BulletSpawn>();
-    
+
     // 사용자 총알 위치 (위치에 따라 사라지게 함)
     private Vector3 bulletPos;
 
     // 다음의 경우 게임 맵을 확인하고 변경한다.
-    [SerializeField]private float maxDistance = 10f;
+    [SerializeField] private float maxDistance = 10f;
 
 
     // 탄환 풀에서 꺼내기 및 새로 생성하기   
     public static BulletSpawn Spawn(BulletSpawn prefab, Vector3 pos, Quaternion rot)
     {
         // 실제 날라가는 플레이어 탄환
-        BulletSpawn instance;  
+        BulletSpawn instance;
 
         if (pool.Count > 0)
         {
             instance = pool[pool.Count - 1];
             pool.RemoveAt(pool.Count - 1);
         }
-        else 
+        else
         {
             instance = Instantiate(prefab);
         }
@@ -57,7 +59,7 @@ public class BulletSpawn : MonoBehaviour
     {
         bulletDir = dir.normalized;
     }
-   
+
 
 
 
@@ -84,8 +86,16 @@ public class BulletSpawn : MonoBehaviour
     {
         if (monster.CompareTag("Monster"))
         {
+            MonsterBase monsterBase = monster.GetComponent<MonsterBase>();
+
+            if (monsterBase != null)
+            {
+                monsterBase.TakeDamage(attackPower);
+            }
+
             ReturnPool();
         }
-    }
 
+    }
 }
+

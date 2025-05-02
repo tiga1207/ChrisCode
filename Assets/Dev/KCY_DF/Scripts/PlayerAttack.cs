@@ -9,19 +9,18 @@ using UnityEngine.Pool;
 
 public class PlayerAttack : MonoBehaviour
 {
-    public float attackPower = 1;
-    public float attackSpeed = 1;
+    public int attackPower = 1;
+    public int attackSpeed = 1;
+    public BulletSpawn bulletPerfab;
 
     private float attackTimer;
-    private Transform attackPoint;  // 공격이 나갈 위치
+    public Transform attackPoint;  // 공격이 나갈 위치
     private AttackTracker tracker;
-    private BulletSpawn bulletPerfab;
 
 
     private void Start()
     {
         tracker = GetComponent<AttackTracker>();
-        attackPoint = transform;
         attackTimer = 0f;
     }
 
@@ -34,6 +33,7 @@ public class PlayerAttack : MonoBehaviour
         if (attackTimer >= 1f / attackSpeed)
         {
             attackTimer = 0f;
+            Debug.Log("초발사");
             TryShoot();
         }
     }
@@ -43,14 +43,26 @@ public class PlayerAttack : MonoBehaviour
 
         if (tracker.nearestTarget != null && bulletPerfab != null)
         {
+            Debug.Log("발사");
+
             // 공격이 나갈 방향
-            Vector3 direction = (tracker.nearestTarget.position - attackPoint.position).normalized; 
+           
+
+            Vector3 mostos = tracker.nearestTarget.position;
+
+            mostos.y = attackPoint.position.y;
+            Vector3 direction = (mostos - attackPoint.position).normalized;
+            //direction.y = attackPoint.position.y;
+
 
             //  해당 방향으로의 회전값
             Quaternion rotation = Quaternion.LookRotation(direction);   
 
             // 소환
-            BulletSpawn newBullet = BulletSpawn.Spawn(bulletPerfab, attackPoint.position, rotation);
+            BulletSpawn newBullet = BulletSpawn.Spawn(bulletPerfab, attackPoint.position , rotation);
+            newBullet.BulletStartDirection(direction);
+            newBullet.attackPower = attackPower;
+
         }
     }
 
