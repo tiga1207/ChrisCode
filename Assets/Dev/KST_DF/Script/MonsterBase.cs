@@ -1,10 +1,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 //일반 몬스터 타입
 public enum MonsterType{Goblin, Skeleton, Etc}
+
+//공격 타입
+public enum AttackType{Meelee =0, Ranged = 1}
 
 public class MonsterBase : MonoBehaviour
 {
@@ -21,6 +25,8 @@ public class MonsterBase : MonoBehaviour
     //공격 관련
 
     [Header("Attack Func")]
+    //공격 타입(근거리, 원거리) -> 기본값은 근거리.
+    public AttackType attackType;
     //공격 데미지
     [SerializeField] protected int m_attackDamage = 2;
     //충돌(몸박) 데미지
@@ -29,13 +35,14 @@ public class MonsterBase : MonoBehaviour
     //공격 쿨타임
     [SerializeField] protected float m_attackCooldown = 1f;
     //공격 쿨타임 코루틴
-    private Coroutine m_attackCoroutine;
-
     //공격 가능 여부 변수
     [SerializeField] private bool m_canAttack = true;
     [SerializeField] private bool m_isPlayerInAttackArea = false;
     [SerializeField] private SphereCollider m_sphereCollider;
     [SerializeField] protected float m_attackRange =2f;
+
+    private Coroutine m_attackCoroutine;
+
 
 
     //기타 정보들 ~~~
@@ -156,6 +163,8 @@ public class MonsterBase : MonoBehaviour
         
 
     }
+    #region 몬스터의 플레이어 추적 로직
+
     protected virtual void FindingPlayer()
     {
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
@@ -165,8 +174,6 @@ public class MonsterBase : MonoBehaviour
             m_playerPos = playerObj.transform;
         }
     }
-    #region 몬스터의 플레이어 추적 로직
-
     //플레이어 위치 & 방향
     protected virtual void MoveToPlayer()
     {
@@ -268,7 +275,7 @@ public class MonsterBase : MonoBehaviour
         m_attackCoroutine = null;
     }
 
-    //공격범위 트리거
+    //공격범위 감지 트리거
     private void OnTriggerEnter(Collider other)
     {
         if(other.gameObject.CompareTag("Player"))
@@ -288,7 +295,20 @@ public class MonsterBase : MonoBehaviour
         }
     }
 
-    
+
+    //공격범위 기즈모모
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.black;
+
+        if(m_sphereCollider !=null)
+        {
+            Gizmos.DrawWireSphere(m_sphereCollider.transform.TransformPoint(m_sphereCollider.center),m_sphereCollider.radius);
+            // Gizmos.DrawWireSphere(m_sphereCollider.transform.position+m_sphereCollider.center,m_sphereCollider.radius);
+        }
+    }
+
+
 
 
     #endregion
@@ -318,6 +338,7 @@ public class MonsterBase : MonoBehaviour
         }
     }
     #endregion
+
     #region 몬스터 애니메이션 관리
 
     protected virtual void MonsterAnimationController()
@@ -325,6 +346,7 @@ public class MonsterBase : MonoBehaviour
         speed = m_rb.velocity.magnitude;
         anim.SetFloat("Speed",speed,0.2f,Time.deltaTime);
         anim.SetBool("isMonsterDie", m_isMonsterDie);
+        anim.SetInteger("AttackType", (int)attackType);
     }
     #endregion
 }
