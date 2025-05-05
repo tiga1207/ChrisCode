@@ -868,6 +868,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_hp: 10
   m_maxHp: 10
+  attackType: 0
   m_attackDamage: 2
   m_collsionDamage: 1
   m_attackCooldown: 1
@@ -4890,7 +4891,7 @@ Transform:
   - {fileID: 7930042865858374667}
   m_Father: {fileID: 1707636905861376271}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &6489714942383207238
+--- !u!1001 &6304458004408718745
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -4898,73 +4899,57 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 499862831208684146}
     m_Modifications:
-    - target: {fileID: 134092, guid: 48610ef49478fca47a49e4e3c55f8c8a, type: 3}
-      propertyPath: m_Name
-      value: SM_Wep_Crystal_Axe_01
-      objectReference: {fileID: 0}
-    - target: {fileID: 469862, guid: 48610ef49478fca47a49e4e3c55f8c8a, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 99.99998
-      objectReference: {fileID: 0}
-    - target: {fileID: 469862, guid: 48610ef49478fca47a49e4e3c55f8c8a, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 99.99998
-      objectReference: {fileID: 0}
-    - target: {fileID: 469862, guid: 48610ef49478fca47a49e4e3c55f8c8a, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 99.999985
-      objectReference: {fileID: 0}
-    - target: {fileID: 469862, guid: 48610ef49478fca47a49e4e3c55f8c8a, type: 3}
+    - target: {fileID: 967700508001881529, guid: 4529b41deca159e418a7f99b420caa3b, type: 3}
       propertyPath: m_LocalPosition.x
       value: -9.8
       objectReference: {fileID: 0}
-    - target: {fileID: 469862, guid: 48610ef49478fca47a49e4e3c55f8c8a, type: 3}
+    - target: {fileID: 967700508001881529, guid: 4529b41deca159e418a7f99b420caa3b, type: 3}
       propertyPath: m_LocalPosition.y
       value: -2.7
       objectReference: {fileID: 0}
-    - target: {fileID: 469862, guid: 48610ef49478fca47a49e4e3c55f8c8a, type: 3}
+    - target: {fileID: 967700508001881529, guid: 4529b41deca159e418a7f99b420caa3b, type: 3}
       propertyPath: m_LocalPosition.z
       value: 0.9
       objectReference: {fileID: 0}
-    - target: {fileID: 469862, guid: 48610ef49478fca47a49e4e3c55f8c8a, type: 3}
+    - target: {fileID: 967700508001881529, guid: 4529b41deca159e418a7f99b420caa3b, type: 3}
       propertyPath: m_LocalRotation.w
       value: -0.24670915
       objectReference: {fileID: 0}
-    - target: {fileID: 469862, guid: 48610ef49478fca47a49e4e3c55f8c8a, type: 3}
+    - target: {fileID: 967700508001881529, guid: 4529b41deca159e418a7f99b420caa3b, type: 3}
       propertyPath: m_LocalRotation.x
       value: -0.74243236
       objectReference: {fileID: 0}
-    - target: {fileID: 469862, guid: 48610ef49478fca47a49e4e3c55f8c8a, type: 3}
+    - target: {fileID: 967700508001881529, guid: 4529b41deca159e418a7f99b420caa3b, type: 3}
       propertyPath: m_LocalRotation.y
       value: 0.5609858
       objectReference: {fileID: 0}
-    - target: {fileID: 469862, guid: 48610ef49478fca47a49e4e3c55f8c8a, type: 3}
+    - target: {fileID: 967700508001881529, guid: 4529b41deca159e418a7f99b420caa3b, type: 3}
       propertyPath: m_LocalRotation.z
       value: 0.27059904
       objectReference: {fileID: 0}
-    - target: {fileID: 469862, guid: 48610ef49478fca47a49e4e3c55f8c8a, type: 3}
+    - target: {fileID: 967700508001881529, guid: 4529b41deca159e418a7f99b420caa3b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 176.404
       objectReference: {fileID: 0}
-    - target: {fileID: 469862, guid: 48610ef49478fca47a49e4e3c55f8c8a, type: 3}
+    - target: {fileID: 967700508001881529, guid: 4529b41deca159e418a7f99b420caa3b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 42.839005
       objectReference: {fileID: 0}
-    - target: {fileID: 469862, guid: 48610ef49478fca47a49e4e3c55f8c8a, type: 3}
+    - target: {fileID: 967700508001881529, guid: 4529b41deca159e418a7f99b420caa3b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 75.561
       objectReference: {fileID: 0}
-    - target: {fileID: 64481665549646672, guid: 48610ef49478fca47a49e4e3c55f8c8a, type: 3}
-      propertyPath: m_Convex
-      value: 0
+    - target: {fileID: 967700508002217235, guid: 4529b41deca159e418a7f99b420caa3b, type: 3}
+      propertyPath: m_Name
+      value: SM_Wep_Crystal_Axe_01
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 48610ef49478fca47a49e4e3c55f8c8a, type: 3}
+  m_SourcePrefab: {fileID: 100100000, guid: 4529b41deca159e418a7f99b420caa3b, type: 3}
 --- !u!4 &6489714942383265824 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 469862, guid: 48610ef49478fca47a49e4e3c55f8c8a, type: 3}
-  m_PrefabInstance: {fileID: 6489714942383207238}
+  m_CorrespondingSourceObject: {fileID: 967700508001881529, guid: 4529b41deca159e418a7f99b420caa3b, type: 3}
+  m_PrefabInstance: {fileID: 6304458004408718745}
   m_PrefabAsset: {fileID: 0}

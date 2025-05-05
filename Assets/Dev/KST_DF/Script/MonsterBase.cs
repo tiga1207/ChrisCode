@@ -29,6 +29,7 @@ public class MonsterBase : MonoBehaviour
     public AttackType attackType;
     //공격 데미지
     [SerializeField] protected int m_attackDamage = 2;
+    public int AttackDMG => m_attackDamage;
     //충돌(몸박) 데미지
     [SerializeField] protected int m_collsionDamage = 1;
 
@@ -135,13 +136,30 @@ public class MonsterBase : MonoBehaviour
             }
         }
 
-        if(m_isPlayerInAttackArea == true && m_canAttack ==true)
+        // if(m_isPlayerInAttackArea == true && m_canAttack ==true)
+        // {
+        //     AttackPlayer();
+        //     m_canAttack= false;
+        //     if (m_attackCoroutine == null)
+        //     {
+        //         m_attackCoroutine = StartCoroutine(IE_AttackCooldown());
+        //     }
+        // }
+        if(m_isPlayerInAttackArea == true)
         {
-            AttackPlayer();
-            m_canAttack= false;
-            if (m_attackCoroutine == null)
+            if(m_canAttack ==true)
             {
-                m_attackCoroutine = StartCoroutine(IE_AttackCooldown());
+                AttackPlayer();
+                m_canAttack= false;
+                if (m_attackCoroutine == null)
+                {
+                    m_attackCoroutine = StartCoroutine(IE_AttackCooldown());
+                }
+            }
+            else
+            {
+                m_rb.velocity= Vector3.zero;
+                return;
             }
         }
 
@@ -193,6 +211,7 @@ public class MonsterBase : MonoBehaviour
     protected virtual void LookPlayer()
     {
         if(m_playerPos == null) return;
+        m_rb.velocity = Vector3.zero;
         Vector3 targetPos = new Vector3(m_playerPos.transform.position.x, transform.position.y, m_playerPos.transform.position.z);
         transform.LookAt(targetPos);
     }
@@ -254,19 +273,22 @@ public class MonsterBase : MonoBehaviour
         {
             Debug.Log($"{gameObject.name} : 플레이어에게 공격로직 실행");
             //TODO<김승태> 플레이어 있을 경우 데미지 로직
-            // if(player!=null)
-            // {
-            //     player.TakeDamage(attackDamage);
-            // }
-            // playerHp.TakeDamage(m_collsionDamage);
-            Debug.Log($"{gameObject.name}이 플레이어에게 데미지를 입힘");
+            anim.SetTrigger("isAttack");
 
             //공격 이펙트 오브젝트 풀 패턴
         }
-
-
-
     }
+    //공격 애니메이션 첫 프레임에 호출출
+    public void HitboxStart()
+    {
+        GetComponentInChildren<MeeleeHitbox>().EnableHitbox();
+    }
+    //공격 애니메이션 마지막 프레임에 호출
+    public void HitboxEnd()
+    {
+        GetComponentInChildren<MeeleeHitbox>().DisableHitbox();
+    }
+
     //공격 쿨타임 코루틴
     private IEnumerator IE_AttackCooldown()
     {
