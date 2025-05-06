@@ -1855,6 +1855,7 @@ GameObject:
   - component: {fileID: 1349395940}
   - component: {fileID: 1349395939}
   - component: {fileID: 1349395938}
+  - component: {fileID: 1349395942}
   m_Layer: 5
   m_Name: LevelUp_Popup
   m_TagString: Untagged
@@ -1891,11 +1892,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
-  m_ScreenMatchMode: 0
+  m_ReferenceResolution: {x: 1920, y: 1080}
+  m_ScreenMatchMode: 1
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
@@ -1947,6 +1948,23 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1349395942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1349395937}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 913b2378b61f4c74ca7c57970011c267, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  traitUIPanel: {fileID: 1349395937}
+  traitButtons:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!1 &1364425925
 GameObject:
   m_ObjectHideFlags: 0
@@ -1995,11 +2013,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
-  m_ScreenMatchMode: 0
+  m_ReferenceResolution: {x: 1920, y: 1080}
+  m_ScreenMatchMode: 1
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
@@ -2605,10 +2623,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1cb2c0fd0e5ccc4db53476e6b7525b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skillSlot:
-  - {fileID: 1993333551}
-  - {fileID: 676854480}
-  - {fileID: 1516034994}
+  icon:
+  - {fileID: 1876997503}
+  - {fileID: 0}
+  - {fileID: 0}
+  name:
+  - {fileID: 144739273}
+  - {fileID: 0}
+  - {fileID: 0}
+  description:
+  - {fileID: 1026977836}
+  - {fileID: 0}
+  - {fileID: 0}
+  playerSkillSelectButton:
+  - {fileID: 1993333554}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!1 &1473560414
 GameObject:
   m_ObjectHideFlags: 0
@@ -3284,11 +3314,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
-  m_ScreenMatchMode: 0
+  m_ReferenceResolution: {x: 1920, y: 1080}
+  m_ScreenMatchMode: 1
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
