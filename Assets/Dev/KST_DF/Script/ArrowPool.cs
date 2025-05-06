@@ -4,6 +4,21 @@ using UnityEngine;
 
 public class ArrowPool : MonoBehaviour
 {
+    public static ArrowPool instance;
+
+    private void Awake()
+    {
+        if(instance ==null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+
+    }
     //화살살 프리펩
     public GameObject arrowPrefab;
 
@@ -42,6 +57,7 @@ public class ArrowPool : MonoBehaviour
         else
         {
             //생성
+            // GameObject arrow = Instantiate(arrowPrefab);
             GameObject arrow = Instantiate(arrowPrefab,transform);
             arrow.SetActive(false);
             return arrow;

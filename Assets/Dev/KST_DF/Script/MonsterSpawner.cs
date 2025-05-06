@@ -48,19 +48,28 @@ public class MonsterSpawner : MonoBehaviour
         }
     }
 
+    // private void SpawnMonster()
+    // {
+    //     int randomType = UnityEngine.Random.Range(0,Enum.GetValues(typeof(MonsterType)).Length -1);
+    //     MonsterType randomMonType = (MonsterType)randomType;
+
+    //     Vector3 ranPos = m_playerPos.position + UnityEngine.Random.insideUnitSphere * m_spawnRange;
+    //     ranPos.y = 0;
+        
+    //     GameObject monster = MonsterPoolManager.s_instance.GetPool(randomMonType);        
+    //     monster.transform.position = ranPos;
+        
+    //     // monster.transform.position = spawnPoint[UnityEngine.Random.Range(1, spawnPoint.Length)].position;
+    // }
     private void SpawnMonster()
     {
-        int randomType = UnityEngine.Random.Range(0,Enum.GetValues(typeof(MonsterType)).Length -1);
-        MonsterType randomMonType = (MonsterType)randomType;
+        Vector3 spawnPos = m_playerPos.position + UnityEngine.Random.insideUnitSphere * m_spawnRange;
+        spawnPos.y = 0;
 
-        Vector3 ranPos = m_playerPos.position + UnityEngine.Random.insideUnitSphere * m_spawnRange;
-        ranPos.y = 0;
-        
-        GameObject monster = MonsterPoolManager.s_instance.GetPool(randomMonType);        
-        monster.transform.position = ranPos;
-        
-        // monster.transform.position = spawnPoint[UnityEngine.Random.Range(1, spawnPoint.Length)].position;
+        GameObject monster = MonsterPoolManager.s_instance.GetRandomPool();
+        monster.transform.position = spawnPos;
     }
+
 
     private void PatternSpawnTimer()
     {

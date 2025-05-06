@@ -8,7 +8,7 @@ using UnityEngine;
 public enum MonsterType{Goblin, Skeleton, Etc}
 
 //공격 타입
-public enum AttackType{Meelee =0, Ranged = 1, Mage =2}
+public enum AttackType{Meelee =0, Ranged = 1, None =2}
 
 public class MonsterBase : MonoBehaviour
 {
@@ -115,6 +115,10 @@ public class MonsterBase : MonoBehaviour
         {
             m_sphereCollider.radius = m_attackRange;
         }
+        if (attackType == AttackType.Ranged)
+        {
+            m_arrowPool = ArrowPool.instance; 
+        }
     }
 
     protected virtual void Update()
@@ -167,7 +171,8 @@ public class MonsterBase : MonoBehaviour
         m_isMonsterDie = false;
 
         //리지드 바디 초기화
-        m_rb.constraints &= ~RigidbodyConstraints.FreezeRotationY; //y축 회전 문제 없애기
+        m_rb.constraints = RigidbodyConstraints.FreezeRotation;
+        // m_rb.constraints &= ~RigidbodyConstraints.FreezeRotationY; //y축 회전 문제 없애기
         m_rb.isKinematic = false;
 
         //스텟 및 상태 초기화
@@ -192,23 +197,33 @@ public class MonsterBase : MonoBehaviour
     protected virtual void MoveToPlayer()
     {
         if(m_playerPos == null) return;
-        // Vector3 targetPos = new Vector3(m_playerPos.transform.position.x, transform.position.y, m_playerPos.transform.position.z);
-        // transform.position = Vector3.MoveTowards(transform.position, targetPos, m_moveSpeed * Time.deltaTime);
-        // transform.LookAt(targetPos);
         Vector3 direction = (m_playerPos.transform.position - transform.position).normalized;
         Vector3 velocity = direction * m_moveSpeed;
 
         m_rb.velocity = new Vector3(velocity.x, m_rb.velocity.y, velocity.z);
-        transform.LookAt(new Vector3 (m_playerPos.position.x,transform.position.y,m_playerPos.position.z));
         
+        Vector3 lookDir = m_playerPos.position - transform.position;
+        lookDir.y = 0f;
+        if (lookDir != Vector3.zero)
+        {
+            Quaternion targetRot = Quaternion.LookRotation(lookDir);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, Time.deltaTime * 10f);
+        }
     }
-
     protected virtual void LookPlayer()
     {
-        if(m_playerPos == null) return;
+        if (m_playerPos == null) return;
+
         m_rb.velocity = Vector3.zero;
-        Vector3 targetPos = new Vector3(m_playerPos.transform.position.x, transform.position.y, m_playerPos.transform.position.z);
-        transform.LookAt(targetPos);
+
+        Vector3 direction = m_playerPos.position - transform.position;
+        direction.y = 0f;
+
+        if (direction != Vector3.zero)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f);
+        }
     }
 
     //플레이어 사망 이벤트

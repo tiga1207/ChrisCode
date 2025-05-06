@@ -33,7 +33,7 @@ public class MonsterPoolManager : MonoBehaviour
 
             for(int j = 0; j<  m_poolSize; j++)
             {
-                GameObject monster = Instantiate(m_prefabs[i]);
+                GameObject monster = Instantiate(m_prefabs[i],this.transform);
                 monster.SetActive(false);
                 m_pools[i].Add(monster);
             }
@@ -53,9 +53,32 @@ public class MonsterPoolManager : MonoBehaviour
             }
         }
 
-        GameObject newMon = Instantiate(m_prefabs[index]);
+        GameObject newMon = Instantiate(m_prefabs[index],this.transform);
         m_pools[index].Add(newMon);
         return newMon;
+    }
+
+    public GameObject GetPool(int index)
+    {
+        foreach(var mon in m_pools[index])
+        {
+            if(!mon.activeSelf)
+            {
+                mon.SetActive(true);
+                mon.GetComponent<MonsterBase>().isPool = true; 
+                return mon;
+            }
+        }
+
+        GameObject newMon = Instantiate(m_prefabs[index],this.transform);
+        m_pools[index].Add(newMon);
+        return newMon;
+    }
+
+    public GameObject GetRandomPool()
+    {
+        int randomIndex = UnityEngine.Random.Range(0, m_prefabs.Length);
+        return GetPool(randomIndex);
     }
 
     public void ReturnPool(MonsterBase monster)
