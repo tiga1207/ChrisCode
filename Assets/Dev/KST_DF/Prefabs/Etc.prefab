@@ -794,7 +794,7 @@ GameObject:
   - component: {fileID: 1557029877192380602}
   - component: {fileID: 1586915278615191679}
   - component: {fileID: 8529695729228882531}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Etc
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -868,10 +868,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_hp: 10
   m_maxHp: 10
+  attackType: 0
   m_attackDamage: 2
   m_collsionDamage: 1
   m_attackCooldown: 1
   m_canAttack: 1
+  m_isAttacking: 0
   m_isPlayerInAttackArea: 0
   m_sphereCollider: {fileID: 8529695729228882531}
   m_attackRange: 2
@@ -879,8 +881,11 @@ MonoBehaviour:
   m_moveSpeed: 3
   monsterType: 2
   m_isMonsterDie: 0
-  speed: 0
+  m_speed: 0
   isPool: 0
+  m_arrowPool: {fileID: 0}
+  m_arrowShootingTransform: {fileID: 0}
+  m_arrowSpeed: 0
   m_playerPos: {fileID: 0}
   m_canTrackingPlayer: 1
   playerHp: {fileID: 0}

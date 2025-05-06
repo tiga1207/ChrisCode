@@ -794,7 +794,7 @@ GameObject:
   - component: {fileID: 1557029877192380602}
   - component: {fileID: 1586915278615191679}
   - component: {fileID: 8529695729228882531}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Etc 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -866,13 +866,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d93219150466640f3800be464b273287, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_hp: 10
-  m_maxHp: 10
+  m_hp: 10000
+  m_maxHp: 10000
   attackType: 0
   m_attackDamage: 2
   m_collsionDamage: 1
   m_attackCooldown: 1
   m_canAttack: 1
+  m_isAttacking: 0
   m_isPlayerInAttackArea: 0
   m_sphereCollider: {fileID: 8529695729228882531}
   m_attackRange: 2
@@ -880,8 +881,11 @@ MonoBehaviour:
   m_moveSpeed: 8
   monsterType: 2
   m_isMonsterDie: 0
-  speed: 0
+  m_speed: 0
   isPool: 0
+  m_arrowPool: {fileID: 0}
+  m_arrowShootingTransform: {fileID: 0}
+  m_arrowSpeed: 0
   m_playerPos: {fileID: 0}
   m_canTrackingPlayer: 1
   playerHp: {fileID: 0}
@@ -953,9 +957,9 @@ SphereCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.5
+  m_Radius: 1
   m_Center: {x: 0, y: 1, z: 0}
 --- !u!1 &1021614894529511336
 GameObject:

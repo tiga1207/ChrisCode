@@ -8,7 +8,7 @@ using UnityEngine;
 public enum MonsterType{Goblin, Skeleton, Etc}
 
 //공격 타입
-public enum AttackType{Meelee =0, Ranged = 1}
+public enum AttackType{Meelee =0, Ranged = 1, Mage =2}
 
 public class MonsterBase : MonoBehaviour
 {
@@ -56,8 +56,13 @@ public class MonsterBase : MonoBehaviour
     // [SerializeField] protected bool m_isMove = false;
     public MonsterType monsterType;
     [SerializeField] protected bool m_isMonsterDie = false;
-    [SerializeField] private float speed;
+    [SerializeField] private float m_speed;
     public bool isPool=false;
+
+    [Header("Raged Info")]
+    [SerializeField] private ArrowPool m_arrowPool;
+    [SerializeField] private Transform m_arrowShootingTransform;
+    [SerializeField] private float m_arrowSpeed =10f;
 
     [Header("Tracking")]
     [SerializeField]private Transform m_playerPos;
@@ -252,17 +257,17 @@ public class MonsterBase : MonoBehaviour
             //플레이어가 몬스터와 충돌할 경우-> 플레이어가 몸박 데미지 만큼 피해를 입게 함.
             playerHp = collision.gameObject.GetComponent<PlayerHp>();
             playerHp.TakeDamage(m_collsionDamage);
-
-            TakeDamage(1);
         }
     }
+    
+    #region 근거리 공격
+
     //공격 로직: sphere 트리거를 이용해 공격 범위를 설정.
     protected virtual void AttackPlayer()
     {
         if(m_playerPos != null)
         {
             Debug.Log($"{gameObject.name} : 플레이어에게 공격로직 실행");
-            //TODO<김승태> 플레이어 있을 경우 데미지 로직
             anim.SetTrigger("isAttack");
 
             //공격 이펙트 오브젝트 풀 패턴
@@ -282,6 +287,48 @@ public class MonsterBase : MonoBehaviour
         AttackCoolDownStart();
         GetComponentInChildren<MeeleeHitbox>().DisableHitbox();
     }
+    #endregion
+
+    #region 원거리 공격
+
+    //모션 중간에 발사하도록 애니메이션 프레임에 삽입
+    public void ShotingArrow()
+    {
+        //오브젝트 풀링
+        GameObject arrowObject = m_arrowPool.GetBulletPool();
+
+        Vector3 directionToPlayer = (m_playerPos.position - m_arrowShootingTransform.position).normalized;
+
+        arrowObject.GetComponent<Arrow>().ArrowInit(m_arrowShootingTransform,directionToPlayer,m_arrowPool, m_arrowSpeed, AttackDMG);
+    }
+
+    //공격 애니메이션 첫 프레임에 호출
+    public void ShootArrowStart()
+    {
+        m_isAttacking= true;
+    }
+    //공격 애니메이션 마지막 프레임에 호출
+    public void ShootArrowEnd()
+    {
+        m_isAttacking = false;
+        AttackCoolDownStart();
+    }
+    #endregion
+
+    #region 마법 공격
+
+    //공격 애니메이션 첫 프레임에 호출출
+    public void MageAttackStart()
+    {
+        m_isAttacking= true;
+    }
+    //공격 애니메이션 마지막 프레임에 호출
+    public void MageAttackwEnd()
+    {
+        m_isAttacking = false;
+        AttackCoolDownStart();
+    }
+    #endregion
 
     //공격 쿨타임 코루틴
     private IEnumerator IE_AttackCooldown()
@@ -368,8 +415,8 @@ public class MonsterBase : MonoBehaviour
 
     protected virtual void MonsterAnimationController()
     {
-        speed = m_rb.velocity.magnitude;
-        anim.SetFloat("Speed",speed,0.2f,Time.deltaTime);
+        m_speed = m_rb.velocity.magnitude;
+        anim.SetFloat("Speed",m_speed,0.2f,Time.deltaTime);
         anim.SetBool("isMonsterDie", m_isMonsterDie);
         anim.SetInteger("AttackType", (int)attackType);
     }
