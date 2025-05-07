@@ -166,7 +166,6 @@ public class PlayerHp : MonoBehaviour
         {
             if (value && !isUntouchable)
             {
-                isUntouchable = true;
                 StartCoroutine(UntouchableTime());
             }
         }
