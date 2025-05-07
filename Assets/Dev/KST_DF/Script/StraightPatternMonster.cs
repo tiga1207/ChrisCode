@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class StraightPatternMonster : MonsterBase
 {
-    //TODO<김승태>직선패턴 몬스터는 어떠한 몬스터와도 충돌이 발생하지 않도록 해야함.
     private Vector3 m_direction;
     [SerializeField]private float m_timer =10f;
 
@@ -12,6 +11,8 @@ public class StraightPatternMonster : MonsterBase
     {
         base.Start();
         m_canTrackingPlayer = false;
+        Physics.IgnoreLayerCollision(this.gameObject.layer,this.gameObject.layer,true);
+        Physics.IgnoreLayerCollision(this.gameObject.layer,LayerMask.NameToLayer("Monster"),true);
     }
     public void InitDir(Vector3 targetDir)
     {

@@ -3637,7 +3637,7 @@ GameObject:
   - component: {fileID: 7645178602707883054}
   - component: {fileID: 4071697431531923538}
   - component: {fileID: 2046319266326444097}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: RockGolem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
