@@ -121,6 +121,8 @@ public class MonsterBase : MonoBehaviour
     protected virtual void Update()
     {
         MonsterAnimationController();
+
+        gameResultState= InGameManager.Instance.GetGameResultState();
         // 플레이어 객체 
         if(m_playerPos  == null || m_isMonsterDie == true) return;
             
