@@ -227,25 +227,25 @@ public class TraitManager : MonoBehaviour
         return false;
     }
 
-    public void HealOnKill()
-    {
-        if (acquiredTraits.TryGetValue(TraitType.HealOnKill, out Trait trait))
-        {
-            // 특성 value 값만큼 회복량 계산
-            float rawhealAmount = trait.value;
-            int healAmount = Mathf.RoundToInt(rawhealAmount); // 소수점 반올림
-
-            if (playerHP != null)
-            {
-                playerHP.Heal(healAmount); //*** PlayerHP에 돌료가 만든 함수 구현 필요
-                Debug.Log($"몬스터 처치 시 체력  {healAmount} 회복!");
-            }
-            else
-            {
-                Debug.LogWarning("PlayerHP 컴포넌트가 없습니다. 회복실패");
-            }
-        }
-    }
+    //public void HealOnKill()
+    //{
+    //    if (acquiredTraits.TryGetValue(TraitType.HealOnKill, out Trait trait))
+    //    {
+    //        // 특성 value 값만큼 회복량 계산
+    //        float rawhealAmount = trait.value;
+    //        int healAmount = Mathf.RoundToInt(rawhealAmount); // 소수점 반올림
+    //
+    //        if (playerHP != null)
+    //        {
+    //            playerHP.Heal(healAmount); //*** PlayerHP에 돌료가 만든 함수 구현 필요
+    //            Debug.Log($"몬스터 처치 시 체력  {healAmount} 회복!");
+    //        }
+    //        else
+    //        {
+    //            Debug.LogWarning("PlayerHP 컴포넌트가 없습니다. 회복실패");
+    //        }
+    //    }
+    //}
 
 
 }
