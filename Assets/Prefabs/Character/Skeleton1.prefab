@@ -797,7 +797,7 @@ GameObject:
   - component: {fileID: 2072439064204589321}
   m_Layer: 15
   m_Name: Skeleton1
-  m_TagString: Untagged
+  m_TagString: Monster
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -891,6 +891,7 @@ MonoBehaviour:
   m_canTrackingPlayer: 1
   playerHp: {fileID: 0}
   anim: {fileID: 0}
+  gameResultState: 0
 --- !u!54 &1557029877192380602
 Rigidbody:
   m_ObjectHideFlags: 0

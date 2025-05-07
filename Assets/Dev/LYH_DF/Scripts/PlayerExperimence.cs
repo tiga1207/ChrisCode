@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player_Experimence : MonoBehaviour
+public class PlayerExperimence : MonoBehaviour
 {
 
     public int currentExp = 0;
@@ -9,6 +9,10 @@ public class Player_Experimence : MonoBehaviour
     public int expToLevelUp = 100;
 
     public TraitUIManager traitUIManager;
+
+    private void Awake()
+    {
+    }
 
     public void GainExp(int amount)
     {

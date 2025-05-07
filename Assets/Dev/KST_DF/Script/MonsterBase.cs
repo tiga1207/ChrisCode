@@ -5,6 +5,7 @@ using Scripts.Manager;
 using UnityEditor;
 using UnityEngine;
 using Scripts;
+using UnityEngine.Events;
 
 //일반 몬스터 타입
 public enum MonsterType{Goblin, Skeleton, Etc}
@@ -48,7 +49,7 @@ public class MonsterBase : MonoBehaviour
     [SerializeField] protected float m_attackRange =2f;
 
     private Coroutine m_attackCoroutine;
-
+    public UnityAction<int> OnDieAction;
 
 
     //기타 정보들 ~~~
@@ -250,6 +251,7 @@ public class MonsterBase : MonoBehaviour
         if(m_hp <=0)
         {
             Debug.Log("몬스터 사망");
+            OnDieAction?.Invoke(10);
             MonsterDied();
             return;
         }

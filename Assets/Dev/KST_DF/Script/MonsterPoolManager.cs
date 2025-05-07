@@ -3,13 +3,13 @@ using Scripts.Interface;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MonsterPoolManager : SimpleSingleton<MonsterPoolManager>, IManager
+public class MonsterPoolManager : SimpleSingleton<MonsterPoolManager>
 {
     [SerializeField] private GameObject[] m_prefabs;
     [SerializeField] private int m_poolSize = 5;
     private List<GameObject>[] m_pools;
 
-    public int Priority => (int)ManagerPriority.MonsterPoolManager;
+    public int Priority => (int)ManagerPriority.MonsterManager;
 
     void InitPools()
     {
@@ -74,18 +74,9 @@ public class MonsterPoolManager : SimpleSingleton<MonsterPoolManager>, IManager
         monster.gameObject.SetActive(false);
     }
 
-    public void Initialize()
+    protected override void Awake()
     {
+        base.Awake();
         InitPools();
-    }
-
-    public void Cleanup()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public GameObject GetGameObject()
-    {
-        throw new System.NotImplementedException();
     }
 }

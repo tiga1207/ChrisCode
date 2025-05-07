@@ -9,10 +9,14 @@ namespace Scripts.Scene
     {
         public override SceneID SceneID => SceneID.InGame;
 
+
         // 필요 리소드 데이터들
         public override void Initialize()
         {
             base.Initialize();
+            GameObject go = GameObject.FindWithTag("Player");
+            MonsterSpawner.Instance.OnMonsterDieAction -= go.GetComponent<PlayerExperimence>().GainExp;
+            MonsterSpawner.Instance.OnMonsterDieAction += go.GetComponent<PlayerExperimence>().GainExp;
         }
 
         public override void LoadManagers()

@@ -34,6 +34,6 @@
         AudioManager,
         UIManager,
         InGameManager,
-        MonsterPoolManager,
+        MonsterManager,
     }
 }

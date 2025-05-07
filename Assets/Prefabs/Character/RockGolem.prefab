@@ -3640,7 +3640,7 @@ GameObject:
   - component: {fileID: 4317351206859812431}
   m_Layer: 17
   m_Name: RockGolem
-  m_TagString: Untagged
+  m_TagString: Monster
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3734,6 +3734,7 @@ MonoBehaviour:
   m_canTrackingPlayer: 1
   playerHp: {fileID: 0}
   anim: {fileID: 0}
+  gameResultState: 0
   m_timer: 10
 --- !u!54 &7645178602707883054
 Rigidbody:

@@ -1,12 +1,13 @@
+using Scripts;
+using Scripts.Interface;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class MonsterSpawner : MonoBehaviour
+public class MonsterSpawner : SimpleSingleton<MonsterSpawner>, IManager
 {
-
     public Transform m_playerPos;
 
     [Header("일반 몬스터 스폰")]
@@ -22,6 +23,10 @@ public class MonsterSpawner : MonoBehaviour
     [Header("공통")]
     //스폰 범위 설정
     [SerializeField] private float m_spawnRange =10f;
+
+    public UnityAction<int> OnMonsterDieAction;
+
+    public int Priority => (int)ManagerPriority.MonsterManager;
 
     void Update()
     {
@@ -47,12 +52,14 @@ public class MonsterSpawner : MonoBehaviour
         spawnPos.y = 0;
 
         GameObject monster = MonsterPoolManager.Instance.GetRandomPool();
+        monster.GetComponent<MonsterBase>().OnDieAction -= OnMonsterDieAction;
+        monster.GetComponent<MonsterBase>().OnDieAction += OnMonsterDieAction;
         monster.transform.position = spawnPos;
     }
 
-    public void SetDieAciton(UnityAction uAciton)
+    public void SetDieAciton(UnityAction<int> uAciton)
     {
-        m_dieAction = uAciton;
+        OnMonsterDieAction = uAciton;
     }
 
     private void PatternSpawnTimer()
@@ -82,5 +89,17 @@ public class MonsterSpawner : MonoBehaviour
         }
     }
 
-    
+    public void Initialize()
+    {
+    }
+
+    public void Cleanup()
+    {
+        throw new NotImplementedException();
+    }
+
+    public GameObject GetGameObject()
+    {
+        return this.gameObject;
+    }
 }
