@@ -1,9 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Xml.Serialization;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Pool;
 
 
 
@@ -12,7 +7,6 @@ public class PlayerAttack : MonoBehaviour
     public int attackPower = 1;
     public int attackSpeed = 1;
     public BulletSpawn bulletPerfab;
-    
     public int extraProjectileCount = 0;          // 추가 발사체 수
     public int pierceCount = 0;                           // 몬스터 관통 가능 횟수
     public float projectileSizeMultiplier = 1f;  // 발사체 크기 배율
@@ -22,16 +16,23 @@ public class PlayerAttack : MonoBehaviour
     private float attackTimer;
     public Transform attackPoint;  // 공격이 나갈 위치
     private AttackTracker tracker;
-
+    private PlayerHp playerHp;
 
     private void Start()
     {
         tracker = GetComponent<AttackTracker>();
+        playerHp = GetComponentInParent<PlayerHp>();
         attackTimer = 0f;
     }
 
     private void Update()
     {
+        if (playerHp == null || playerHp.isDead || playerHp.isHit)
+        {
+            // 피격, 죽을 때 공격 금지
+            return;
+        }
+
         // 시간에 따른 공격 속도 설정  speed = 1 이면 1초에 1번
 
         attackTimer += Time.deltaTime;
@@ -42,6 +43,8 @@ public class PlayerAttack : MonoBehaviour
             Debug.Log("초발사");
             TryShoot();
         }
+
+
     }
 
     public void TryShoot()
@@ -52,7 +55,7 @@ public class PlayerAttack : MonoBehaviour
             Debug.Log("발사");
 
             // 공격이 나갈 방향
-           
+
 
             Vector3 mostos = tracker.nearestTarget.position;
 
@@ -62,10 +65,10 @@ public class PlayerAttack : MonoBehaviour
 
 
             //  해당 방향으로의 회전값
-            Quaternion rotation = Quaternion.LookRotation(direction);   
+            Quaternion rotation = Quaternion.LookRotation(direction);
 
             // 소환
-            BulletSpawn newBullet = BulletSpawn.Spawn(bulletPerfab, attackPoint.position , rotation);
+            BulletSpawn newBullet = BulletSpawn.Spawn(bulletPerfab, attackPoint.position, rotation);
             newBullet.BulletStartDirection(direction);
             newBullet.attackPower = attackPower;
 

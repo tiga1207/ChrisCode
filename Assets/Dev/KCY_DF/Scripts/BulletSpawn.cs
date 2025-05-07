@@ -1,6 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class BulletSpawn : MonoBehaviour
@@ -75,6 +73,8 @@ public class BulletSpawn : MonoBehaviour
         //  탄속 설정
         transform.position += bulletDir * bulletSpeed * Time.deltaTime;
 
+        // 탄환 회전 (직선형으로 날아가는 탄환은 부자연스러움)
+        transform.Rotate(0f, 0f, 360f * Time.deltaTime);
 
         //  일정 거리 이상 떨어질 때 탄 없에기
         if (Vector3.Distance(bulletPos, transform.position) > maxDistance)
