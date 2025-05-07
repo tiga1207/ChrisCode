@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using Scripts.Manager;
 
 
 public class PlayerAttack : MonoBehaviour
@@ -11,7 +11,7 @@ public class PlayerAttack : MonoBehaviour
     public int pierceCount = 0;                           // 몬스터 관통 가능 횟수
     public float projectileSizeMultiplier = 1f;  // 발사체 크기 배율
     public float explosionRadius = 0f;              // 폭발 반경
-
+    public AudioClip attackSound;
 
     private float attackTimer;
     public Transform attackPoint;  // 공격이 나갈 위치
@@ -67,6 +67,11 @@ public class PlayerAttack : MonoBehaviour
 
                 ShootInDirection(left);
                 ShootInDirection(right);
+            }
+
+            if (attackSound != null)
+            {
+                AudioManager.Instance.PlaySFX(attackSound);
             }
         }
     }

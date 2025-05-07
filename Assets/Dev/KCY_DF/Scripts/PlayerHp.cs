@@ -1,6 +1,7 @@
 using Unity.VisualScripting;
 using UnityEngine;
 using System.Collections;
+using Scripts.Manager;
 
 public class PlayerHp : MonoBehaviour
 {
@@ -9,6 +10,9 @@ public class PlayerHp : MonoBehaviour
     public int LimitMaxHealth = 10;
     public bool isDead = false;
     public bool isHit = false;
+    public AudioClip hitSound;
+    public AudioClip deathSound;
+
     private bool isUntouchable = false;
     private float untouchableTime = 2f;
     private float timeSinceLastHit = 0f;
@@ -42,6 +46,12 @@ public class PlayerHp : MonoBehaviour
 
         CurrentHealth -= damage;
 
+        // 피격 시 사운드 _ 수동설정
+        if (hitSound != null)
+        {
+            AudioManager.Instance.PlaySFX(hitSound);
+        }
+
         if (CurrentHealth <= 0)
         {
             PlayerDeath();
@@ -61,6 +71,13 @@ public class PlayerHp : MonoBehaviour
     {  
         if (isDead) return;
         isDead = true;
+
+        // 사망 시 사운드 
+        if (deathSound != null)
+        {
+            AudioManager.Instance.PlaySFX(deathSound);
+        }
+
         if (animator != null)
         {
             animator.SetTrigger("DeathTrigger");
