@@ -794,6 +794,7 @@ GameObject:
   - component: {fileID: 1557029877192380602}
   - component: {fileID: 1586915278615191679}
   - component: {fileID: 8529695729228882531}
+  - component: {fileID: 2072439064204589321}
   m_Layer: 15
   m_Name: Skeleton1
   m_TagString: Untagged
@@ -843,7 +844,7 @@ Animator:
   m_GameObject: {fileID: 944514543498036531}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: b69174d668ba02d44b14a084b217670a, type: 3}
-  m_Controller: {fileID: 9100000, guid: ecedf3d70aa0d4a56ad93808aac47408, type: 2}
+  m_Controller: {fileID: 9100000, guid: f3356aafe49cc934e9e7503ebf532c35, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -961,6 +962,22 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 1
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &2072439064204589321
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 944514543498036531}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2ef31caf2046364285cd21114743285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shotSound: {fileID: 8300000, guid: 727597d5f3999491ea0ee5ecec8f64b1, type: 3}
+  hurtSound: {fileID: 8300000, guid: 646d5e8a87d4aab4ebb8df843fd09723, type: 3}
+  slashSound: {fileID: 8300000, guid: 178b03530acb54f18847f85200fff708, type: 3}
+  deadSound: {fileID: 8300000, guid: 7ac0dfae083d2b94780328d7e42f29e7, type: 3}
 --- !u!1 &1021614894529511336
 GameObject:
   m_ObjectHideFlags: 0
