@@ -2,14 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
+using Scripts.Manager;
 
 public class HUD : MonoBehaviour
 {
     [Header("HUD Elements")]
+    [SerializeField] private Slider hpSlider;
+    [SerializeField] private TextMeshProUGUI hpText;
     [SerializeField] private Slider expSlider;
-    [SerializeField] private Text levelText;
-    [SerializeField] private Text killText;
-    [SerializeField] private Text timeText;
+    [SerializeField] private TextMeshProUGUI levelText;
+    [SerializeField] private TextMeshProUGUI killText;
+    [SerializeField] private TextMeshProUGUI timeText;
+
+    //hp 저장
+    private PlayerHp hp;
+
+    private PlayerExperimence playerExp;
+
 
     // TODO: 나중에 GameManager에서 받아오도록 연결
     float curExp = 3;
@@ -17,28 +27,49 @@ public class HUD : MonoBehaviour
     int level = 999;
     int kill = 100;
 
-    private float maxTime = 150;  //
-    private float currentTime = 160;
-    public float remainTime;
+    private void Start()
+    {
+        GameObject player = GameObject.FindWithTag("Player");
 
+        if (player != null)
+        {
+            hp = player.GetComponent<PlayerHp>();
+            playerExp = player.GetComponent<PlayerExperimence>();
+        }
+    }
+
+    private float currenTime;
 
     //TODO - 플레이어의 체력
     private void LateUpdate()
     {
         UpdateExp();
         UpdateLevel();
+        UpdateHp();
+        UpdateHpText();
         UpdateKill();
         UpdateTime();
     }
 
+    //체력
+    private void UpdateHpText()
+    {
+        hpText.text = string.Format("{0}/{1}", hp.GetCurrentHealth(), hp.GetMaxHealth());
+    }
+
+    private void UpdateHp()
+    {
+        hpSlider.value = hp.GetCurrentHealth();
+    }
+
     private void UpdateExp()
     {
-        expSlider.value = curExp / maxExp;
+        expSlider.value = playerExp.currentExp;
     }
 
     private void UpdateLevel()
     {
-        levelText.text = string.Format("Lv.{0:F0}", level);   
+        levelText.text = string.Format("Lv.{0:F0}", playerExp.level);
     }
 
     private void UpdateKill()
@@ -48,16 +79,13 @@ public class HUD : MonoBehaviour
 
     private void UpdateTime()
     {
-        remainTime = maxTime - currentTime;
-        int min = Mathf.FloorToInt(remainTime / 60);
-        int sec = Mathf.FloorToInt(remainTime % 60);
+        currenTime = InGameManager.Instance.GetInGameCurrenttTime();
+        int min = Mathf.FloorToInt(currenTime / 60);
+        int sec = Mathf.FloorToInt(currenTime % 60);
+
         if (min >= 0 && sec >= 0)
         {
-            string.Format("{0:D2}:{1:D2}", min, sec);
-        }
-        else
-        {
-            timeText.text = "00:00"; //더이상 시간이 흐르지 않게
+            timeText.text = string.Format("{0:D2}:{1:D2}", min, sec);
         }
     }
 }

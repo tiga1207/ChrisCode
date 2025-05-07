@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//임시 스킬 받아오는 스크립트
 public class PMS_Skill
 {
     public string skillName;
@@ -15,5 +16,3 @@ public class PMS_Skill
         this.skillLevel = skillLevel;
     }
 }
-
-
