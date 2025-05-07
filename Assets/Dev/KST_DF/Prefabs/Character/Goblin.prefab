@@ -1698,12 +1698,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d93219150466640f3800be464b273287, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_hp: 1000000
-  m_maxHp: 1000000
+  m_hp: 10
+  m_maxHp: 10
+  attackType: 2
   m_attackDamage: 2
   m_collsionDamage: 1
   m_attackCooldown: 1
   m_canAttack: 1
+  m_isAttacking: 0
   m_isPlayerInAttackArea: 0
   m_sphereCollider: {fileID: 8207372480859528588}
   m_attackRange: 2
@@ -1711,8 +1713,11 @@ MonoBehaviour:
   m_moveSpeed: 3
   monsterType: 0
   m_isMonsterDie: 0
-  speed: 0
+  m_speed: 0
   isPool: 0
+  m_arrowPool: {fileID: 0}
+  m_arrowShootingTransform: {fileID: 0}
+  m_arrowSpeed: 10
   m_playerPos: {fileID: 0}
   m_canTrackingPlayer: 1
   playerHp: {fileID: 0}

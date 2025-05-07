@@ -3711,10 +3711,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_hp: 10
   m_maxHp: 10
+  attackType: 2
   m_attackDamage: 2
   m_collsionDamage: 1
   m_attackCooldown: 1
   m_canAttack: 1
+  m_isAttacking: 0
   m_isPlayerInAttackArea: 0
   m_sphereCollider: {fileID: 4071697431531923538}
   m_attackRange: 2
@@ -3722,8 +3724,11 @@ MonoBehaviour:
   m_moveSpeed: 8
   monsterType: 2
   m_isMonsterDie: 0
-  speed: 0
+  m_speed: 0
   isPool: 0
+  m_arrowPool: {fileID: 0}
+  m_arrowShootingTransform: {fileID: 0}
+  m_arrowSpeed: 10
   m_playerPos: {fileID: 0}
   m_canTrackingPlayer: 1
   playerHp: {fileID: 0}

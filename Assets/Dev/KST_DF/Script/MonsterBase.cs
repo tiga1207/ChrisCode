@@ -1,10 +1,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 //일반 몬스터 타입
 public enum MonsterType{Goblin, Skeleton, Etc}
+
+//공격 타입
+public enum AttackType{Meelee =0, Ranged = 1, None =2}
 
 public class MonsterBase : MonoBehaviour
 {
@@ -21,21 +25,28 @@ public class MonsterBase : MonoBehaviour
     //공격 관련
 
     [Header("Attack Func")]
+    //공격 타입(근거리, 원거리) -> 기본값은 근거리.
+    public AttackType attackType;
     //공격 데미지
     [SerializeField] protected int m_attackDamage = 2;
+    public int AttackDMG => m_attackDamage;
     //충돌(몸박) 데미지
     [SerializeField] protected int m_collsionDamage = 1;
 
     //공격 쿨타임
     [SerializeField] protected float m_attackCooldown = 1f;
     //공격 쿨타임 코루틴
-    private Coroutine m_attackCoroutine;
-
     //공격 가능 여부 변수
     [SerializeField] private bool m_canAttack = true;
+
+    [SerializeField] private bool m_isAttacking = false;
+
     [SerializeField] private bool m_isPlayerInAttackArea = false;
     [SerializeField] private SphereCollider m_sphereCollider;
     [SerializeField] protected float m_attackRange =2f;
+
+    private Coroutine m_attackCoroutine;
+
 
 
     //기타 정보들 ~~~
@@ -45,8 +56,13 @@ public class MonsterBase : MonoBehaviour
     // [SerializeField] protected bool m_isMove = false;
     public MonsterType monsterType;
     [SerializeField] protected bool m_isMonsterDie = false;
-    [SerializeField] private float speed;
+    [SerializeField] private float m_speed;
     public bool isPool=false;
+
+    [Header("Raged Info")]
+    [SerializeField] private ArrowPool m_arrowPool;
+    [SerializeField] private Transform m_arrowShootingTransform;
+    [SerializeField] private float m_arrowSpeed =10f;
 
     [Header("Tracking")]
     [SerializeField]private Transform m_playerPos;
@@ -60,11 +76,6 @@ public class MonsterBase : MonoBehaviour
 
     [Header("애니메이션")]
     [SerializeField] protected Animator anim;
-
-    /*AI 및 추적 로직
-    지속적 스폰
-    다양한 타입의 적 구현
-    */
 
     void OnEnable()
     {
@@ -84,7 +95,6 @@ public class MonsterBase : MonoBehaviour
         }
         m_isPlayerInAttackArea = false;
         m_canAttack=true;
-
         
         //TODO<김승태> - 플레이어 죽음 이벤트 해제 필요 - 20250430
         //player.OnPlayerDied.RemoveListener(HandlePlayerDied);
@@ -105,6 +115,10 @@ public class MonsterBase : MonoBehaviour
         {
             m_sphereCollider.radius = m_attackRange;
         }
+        if (attackType == AttackType.Ranged)
+        {
+            m_arrowPool = ArrowPool.instance; 
+        }
     }
 
     protected virtual void Update()
@@ -114,31 +128,42 @@ public class MonsterBase : MonoBehaviour
         if(m_playerPos  == null || m_isMonsterDie == true) return;
             
         //공격범위 내에 있을 경우 플레이어를 바라보면서 공격, 아닐 경우 플레이어 위치 추척하며 이동
-        if(m_canTrackingPlayer == true) // 플레이어를 추적하는 몬스터의 경우만.
+        if (m_canTrackingPlayer == true)
         {
-            if(m_isPlayerInAttackArea == false)
+            //공격범위에 플레이어가 없을 때
+            if (m_isPlayerInAttackArea == false) 
             {
-                MoveToPlayer();
-                Debug.Log("움직이기");
+                //공격중이 아니면 플레이어 추적적
+                if(m_isAttacking == false)
+                {
+                    MoveToPlayer();
+                }
+                //공격중이면 움직임 정지.
+                else
+                {
+                    m_rb.velocity = Vector3.zero;
+                }
             }
             else
             {
-                LookPlayer();
-                Debug.Log("바라보기");
+                if(m_isAttacking == false)// 공격중이 아닐 때 
+                {
+                    LookPlayer();
+                }
+                else
+                {
+                    m_rb.velocity = Vector3.zero;
+                }
+
+                if (m_canAttack)
+                {
+                    AttackPlayer();
+                    m_canAttack = false;
+                }
             }
         }
-
-        if(m_isPlayerInAttackArea == true && m_canAttack ==true)
-        {
-            AttackPlayer();
-            m_canAttack= false;
-            if (m_attackCoroutine == null)
-            {
-                m_attackCoroutine = StartCoroutine(IE_AttackCooldown());
-            }
-        }
-
     }
+
 
     protected virtual void InitStatus()
     {
@@ -146,7 +171,8 @@ public class MonsterBase : MonoBehaviour
         m_isMonsterDie = false;
 
         //리지드 바디 초기화
-        m_rb.constraints &= ~RigidbodyConstraints.FreezeRotationY; //y축 회전 문제 없애기
+        m_rb.constraints = RigidbodyConstraints.FreezeRotation;
+        // m_rb.constraints &= ~RigidbodyConstraints.FreezeRotationY; //y축 회전 문제 없애기
         m_rb.isKinematic = false;
 
         //스텟 및 상태 초기화
@@ -156,6 +182,8 @@ public class MonsterBase : MonoBehaviour
         
 
     }
+    #region 몬스터의 플레이어 추적 로직
+
     protected virtual void FindingPlayer()
     {
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
@@ -165,29 +193,37 @@ public class MonsterBase : MonoBehaviour
             m_playerPos = playerObj.transform;
         }
     }
-    #region 몬스터의 플레이어 추적 로직
-
     //플레이어 위치 & 방향
     protected virtual void MoveToPlayer()
     {
         if(m_playerPos == null) return;
-        // Vector3 targetPos = new Vector3(m_playerPos.transform.position.x, transform.position.y, m_playerPos.transform.position.z);
-        // transform.position = Vector3.MoveTowards(transform.position, targetPos, m_moveSpeed * Time.deltaTime);
-        // transform.LookAt(targetPos);
         Vector3 direction = (m_playerPos.transform.position - transform.position).normalized;
         Vector3 velocity = direction * m_moveSpeed;
 
         m_rb.velocity = new Vector3(velocity.x, m_rb.velocity.y, velocity.z);
-        transform.LookAt(new Vector3 (m_playerPos.position.x,transform.position.y,m_playerPos.position.z));
-        Debug.Log("실행");
         
+        Vector3 lookDir = m_playerPos.position - transform.position;
+        lookDir.y = 0f;
+        if (lookDir != Vector3.zero)
+        {
+            Quaternion targetRot = Quaternion.LookRotation(lookDir);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, Time.deltaTime * 10f);
+        }
     }
-
     protected virtual void LookPlayer()
     {
-        if(m_playerPos == null) return;
-        Vector3 targetPos = new Vector3(m_playerPos.transform.position.x, transform.position.y, m_playerPos.transform.position.z);
-        transform.LookAt(targetPos);
+        if (m_playerPos == null) return;
+
+        m_rb.velocity = Vector3.zero;
+
+        Vector3 direction = m_playerPos.position - transform.position;
+        direction.y = 0f;
+
+        if (direction != Vector3.zero)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f);
+        }
     }
 
     //플레이어 사망 이벤트
@@ -236,30 +272,79 @@ public class MonsterBase : MonoBehaviour
             //플레이어가 몬스터와 충돌할 경우-> 플레이어가 몸박 데미지 만큼 피해를 입게 함.
             playerHp = collision.gameObject.GetComponent<PlayerHp>();
             playerHp.TakeDamage(m_collsionDamage);
-
-            TakeDamage(1);
         }
     }
+    
+    #region 근거리 공격
+
     //공격 로직: sphere 트리거를 이용해 공격 범위를 설정.
     protected virtual void AttackPlayer()
     {
         if(m_playerPos != null)
         {
             Debug.Log($"{gameObject.name} : 플레이어에게 공격로직 실행");
-            //TODO<김승태> 플레이어 있을 경우 데미지 로직
-            // if(player!=null)
-            // {
-            //     player.TakeDamage(attackDamage);
-            // }
-            // playerHp.TakeDamage(m_collsionDamage);
-            Debug.Log($"{gameObject.name}이 플레이어에게 데미지를 입힘");
+            anim.SetTrigger("isAttack");
 
             //공격 이펙트 오브젝트 풀 패턴
         }
-
-
-
     }
+
+    //공격 애니메이션 첫 프레임에 호출출
+    public void HitboxStart()
+    {
+        m_isAttacking= true;
+        GetComponentInChildren<MeeleeHitbox>().EnableHitbox();
+    }
+    //공격 애니메이션 마지막 프레임에 호출
+    public void HitboxEnd()
+    {
+        m_isAttacking = false;
+        AttackCoolDownStart();
+        GetComponentInChildren<MeeleeHitbox>().DisableHitbox();
+    }
+    #endregion
+
+    #region 원거리 공격
+
+    //모션 중간에 발사하도록 애니메이션 프레임에 삽입
+    public void ShotingArrow()
+    {
+        //오브젝트 풀링
+        GameObject arrowObject = m_arrowPool.GetBulletPool();
+
+        Vector3 directionToPlayer = (m_playerPos.position - m_arrowShootingTransform.position).normalized;
+
+        arrowObject.GetComponent<Arrow>().ArrowInit(m_arrowShootingTransform,directionToPlayer,m_arrowPool, m_arrowSpeed, AttackDMG);
+    }
+
+    //공격 애니메이션 첫 프레임에 호출
+    public void ShootArrowStart()
+    {
+        m_isAttacking= true;
+    }
+    //공격 애니메이션 마지막 프레임에 호출
+    public void ShootArrowEnd()
+    {
+        m_isAttacking = false;
+        AttackCoolDownStart();
+    }
+    #endregion
+
+    #region 마법 공격
+
+    //공격 애니메이션 첫 프레임에 호출출
+    public void MageAttackStart()
+    {
+        m_isAttacking= true;
+    }
+    //공격 애니메이션 마지막 프레임에 호출
+    public void MageAttackwEnd()
+    {
+        m_isAttacking = false;
+        AttackCoolDownStart();
+    }
+    #endregion
+
     //공격 쿨타임 코루틴
     private IEnumerator IE_AttackCooldown()
     {
@@ -267,9 +352,18 @@ public class MonsterBase : MonoBehaviour
         m_canAttack = true;
         m_attackCoroutine = null;
     }
+    
+    //공격 쿨타임 시작 
+    public void AttackCoolDownStart()
+    {
+        if (m_attackCoroutine == null)
+        {
+            m_attackCoroutine = StartCoroutine(IE_AttackCooldown());
+        }
+    }
 
-    //공격범위 트리거
-    private void OnTriggerEnter(Collider other)
+    //공격범위 감지 트리거
+    private void OnTriggerStay(Collider other)
     {
         if(other.gameObject.CompareTag("Player"))
         {
@@ -288,7 +382,20 @@ public class MonsterBase : MonoBehaviour
         }
     }
 
-    
+
+    //공격범위 기즈모
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.black;
+
+        if(m_sphereCollider !=null)
+        {
+            Gizmos.DrawWireSphere(m_sphereCollider.transform.TransformPoint(m_sphereCollider.center),m_sphereCollider.radius);
+            // Gizmos.DrawWireSphere(m_sphereCollider.transform.position+m_sphereCollider.center,m_sphereCollider.radius);
+        }
+    }
+
+
 
 
     #endregion
@@ -318,13 +425,15 @@ public class MonsterBase : MonoBehaviour
         }
     }
     #endregion
+
     #region 몬스터 애니메이션 관리
 
     protected virtual void MonsterAnimationController()
     {
-        speed = m_rb.velocity.magnitude;
-        anim.SetFloat("Speed",speed,0.2f,Time.deltaTime);
+        m_speed = m_rb.velocity.magnitude;
+        anim.SetFloat("Speed",m_speed,0.2f,Time.deltaTime);
         anim.SetBool("isMonsterDie", m_isMonsterDie);
+        anim.SetInteger("AttackType", (int)attackType);
     }
     #endregion
 }
