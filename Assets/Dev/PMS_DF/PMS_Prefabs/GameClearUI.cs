@@ -1,3 +1,4 @@
+using Scripts.Manager;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,5 +16,6 @@ public class GameClearUI : MonoBehaviour
     private void OnQuitButton()
     {
         //타이틀 씬 전화 메서드 추가
+        SceneManagerEx.Instance.LoadSceneWithFade("PMS_TiTleScene");
     }
 }
