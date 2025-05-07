@@ -5,11 +5,11 @@ using UnityEngine;
 public class MeeleeHitbox : MonoBehaviour
 {
     [SerializeField] private Collider m_weaponCollider;
-    [SerializeField] private MonsterBase monsterBase;
+    [SerializeField] private MonsterBase m_monsterBase;
     void Awake()
     {
         m_weaponCollider.enabled = false;
-        monsterBase = GetComponentInParent<MonsterBase>();
+        m_monsterBase = GetComponentInParent<MonsterBase>();
     }
 
     public void EnableHitbox()
@@ -25,8 +25,8 @@ public class MeeleeHitbox : MonoBehaviour
     {
         if(other.CompareTag("Player"))
         {
-            other.GetComponent<PlayerHp>().TakeDamage(monsterBase.AttackDMG);
-            Debug.Log($"{monsterBase.gameObject.name}이 플레이어에게 {monsterBase.AttackDMG} 데미지를 입힘");
+            other.GetComponent<PlayerHp>().TakeDamage(m_monsterBase.AttackDMG);
+            Debug.Log($"{m_monsterBase.gameObject.name}이 플레이어에게 {m_monsterBase.AttackDMG} 데미지를 입힘");
 
         }
     }

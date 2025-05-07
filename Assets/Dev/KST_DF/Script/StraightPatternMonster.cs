@@ -42,7 +42,5 @@ public class StraightPatternMonster : MonsterBase
 
         Vector3 velocity = m_direction * m_moveSpeed;
         m_rb.velocity = new Vector3(velocity.x, m_rb.velocity.y, velocity.z);
-
-        // transform.position += m_direction * m_moveSpeed * Time.deltaTime;
     }
 }

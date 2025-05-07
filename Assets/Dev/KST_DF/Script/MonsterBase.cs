@@ -81,9 +81,6 @@ public class MonsterBase : MonoBehaviour
     {
         FindingPlayer();
         InitStatus();
-
-        //TODO<김승태> - 플레이어 죽음 이벤트 등록 필요
-        //player.OnPlayerDied.AddListner(HandlePlayerDied)
     }
 
     protected virtual void OnDisable()
@@ -95,10 +92,7 @@ public class MonsterBase : MonoBehaviour
         }
         m_isPlayerInAttackArea = false;
         m_canAttack=true;
-        
-        //TODO<김승태> - 플레이어 죽음 이벤트 해제 필요 - 20250430
-        //player.OnPlayerDied.RemoveListener(HandlePlayerDied);
-        
+
     }
     protected virtual void Awake()
     {
@@ -117,7 +111,7 @@ public class MonsterBase : MonoBehaviour
         }
         if (attackType == AttackType.Ranged)
         {
-            m_arrowPool = ArrowPool.instance; 
+            m_arrowPool = ArrowPool.s_instance; 
         }
     }
 
@@ -213,9 +207,7 @@ public class MonsterBase : MonoBehaviour
     protected virtual void LookPlayer()
     {
         if (m_playerPos == null) return;
-
         m_rb.velocity = Vector3.zero;
-
         Vector3 direction = m_playerPos.position - transform.position;
         direction.y = 0f;
 
@@ -382,7 +374,6 @@ public class MonsterBase : MonoBehaviour
         }
     }
 
-
     //공격범위 기즈모
     void OnDrawGizmos()
     {
@@ -394,10 +385,6 @@ public class MonsterBase : MonoBehaviour
             // Gizmos.DrawWireSphere(m_sphereCollider.transform.position+m_sphereCollider.center,m_sphereCollider.radius);
         }
     }
-
-
-
-
     #endregion
 
     #region 몬스터 생성 및 사망 로직
