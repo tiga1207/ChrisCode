@@ -3818,10 +3818,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2ef31caf2046364285cd21114743285, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shotSound: {fileID: 8300000, guid: 727597d5f3999491ea0ee5ecec8f64b1, type: 3}
-  hurtSound: {fileID: 8300000, guid: 646d5e8a87d4aab4ebb8df843fd09723, type: 3}
-  slashSound: {fileID: 8300000, guid: 178b03530acb54f18847f85200fff708, type: 3}
-  deadSound: {fileID: 8300000, guid: 7ac0dfae083d2b94780328d7e42f29e7, type: 3}
+  m_shotSound: {fileID: 8300000, guid: 51a75955cea7541b0809fed2de82be21, type: 3}
+  m_hurtSound: {fileID: 8300000, guid: 646d5e8a87d4aab4ebb8df843fd09723, type: 3}
+  m_slashSound: {fileID: 8300000, guid: 178b03530acb54f18847f85200fff708, type: 3}
+  m_deadSound: {fileID: 8300000, guid: 6754bf97d405c2e4ca1c274b8354b9e9, type: 3}
 --- !u!1 &7748486353921059994
 GameObject:
   m_ObjectHideFlags: 0

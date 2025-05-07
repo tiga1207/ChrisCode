@@ -5,24 +5,24 @@ using UnityEngine;
 
 public class MonsterAudio : MonoBehaviour
 {
-    [SerializeField] private AudioClip shotSound;
-    [SerializeField] private AudioClip hurtSound;
-    [SerializeField] private AudioClip slashSound;
-    [SerializeField] private AudioClip deadSound;
+    [SerializeField] private AudioClip m_shotSound;
+    [SerializeField] private AudioClip m_hurtSound;
+    [SerializeField] private AudioClip m_slashSound;
+    [SerializeField] private AudioClip m_deadSound;
     public void ShootingSound()
     {
-        AudioManager.Instance.PlaySFX(shotSound);
+        AudioManager.Instance.PlaySFX(m_shotSound);
     }
     public void HurtSound()
     {
-        AudioManager.Instance.PlaySFX(hurtSound);
+        AudioManager.Instance.PlaySFX(m_hurtSound);
     }
     public void SlashSound()
     {
-        AudioManager.Instance.PlaySFX(slashSound);
+        AudioManager.Instance.PlaySFX(m_slashSound);
     }
     public void DeadSound()
     {
-        AudioManager.Instance.PlaySFX(deadSound);
+        AudioManager.Instance.PlaySFX(m_deadSound);
     }
 }

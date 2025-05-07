@@ -22,14 +22,6 @@ public class MonsterSpawner : MonoBehaviour
     //스폰 범위 설정
     [SerializeField] private float m_spawnRange =10f;
 
-
-    //스폰 포인트를 지정할 경우
-    // public Transform[] spawnPoint;
-    // void Awake()
-    // {
-    //     // spawnPoint = GetComponentsInChildren<Transform>();
-
-    // }
     void Update()
     {
         NormalSpawnTimer();
@@ -48,19 +40,6 @@ public class MonsterSpawner : MonoBehaviour
         }
     }
 
-    // private void SpawnMonster()
-    // {
-    //     int randomType = UnityEngine.Random.Range(0,Enum.GetValues(typeof(MonsterType)).Length -1);
-    //     MonsterType randomMonType = (MonsterType)randomType;
-
-    //     Vector3 ranPos = m_playerPos.position + UnityEngine.Random.insideUnitSphere * m_spawnRange;
-    //     ranPos.y = 0;
-        
-    //     GameObject monster = MonsterPoolManager.s_instance.GetPool(randomMonType);        
-    //     monster.transform.position = ranPos;
-        
-    //     // monster.transform.position = spawnPoint[UnityEngine.Random.Range(1, spawnPoint.Length)].position;
-    // }
     private void SpawnMonster()
     {
         Vector3 spawnPos = m_playerPos.position + UnityEngine.Random.insideUnitSphere * m_spawnRange;

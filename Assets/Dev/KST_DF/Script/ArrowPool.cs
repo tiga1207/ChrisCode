@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class ArrowPool : MonoBehaviour
 {
-    public static ArrowPool instance;
+    public static ArrowPool s_instance;
 
     private void Awake()
     {
-        if(instance ==null)
+        if(s_instance ==null)
         {
-            instance = this;
+            s_instance = this;
             DontDestroyOnLoad(gameObject);
         }
         else
@@ -57,7 +57,6 @@ public class ArrowPool : MonoBehaviour
         else
         {
             //생성
-            // GameObject arrow = Instantiate(arrowPrefab);
             GameObject arrow = Instantiate(arrowPrefab,transform);
             arrow.SetActive(false);
             return arrow;
