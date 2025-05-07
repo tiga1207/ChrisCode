@@ -4,7 +4,6 @@ using UnityEngine;
 
 public enum ButtonName
 {
-    //TitleScene
     StartButton,
     OptionButton,
     GameCloseButton,

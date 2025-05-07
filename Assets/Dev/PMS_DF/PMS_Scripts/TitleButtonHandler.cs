@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
 using Scripts.UI;
+using Scripts.Manager;
 
 public class TitleButtonHandler : MonoBehaviour
 {
@@ -57,16 +58,17 @@ public class TitleButtonHandler : MonoBehaviour
 
     private void StartGame()
     {
-        Debug.Log("게임 시작!");
+        SceneManagerEx.Instance.LoadSceneAsync("PMS_Scene");
+        Debug.Log("씬 전환");
     }
 
-    private void PauseGame()
+    private void Option()
     {
         Debug.Log("게임 일시 정지!");
     }
 
     private void ExitGame()
     {
-        Debug.Log("게임 종료!");
+        Debug.Log("게임 종료 버튼 클릭!");
     }
 }
