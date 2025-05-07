@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Scripts.Manager;
 using UnityEditor;
 using UnityEngine;
+using Scripts;
 
 //일반 몬스터 타입
 public enum MonsterType{Goblin, Skeleton, Etc}
@@ -76,6 +78,7 @@ public class MonsterBase : MonoBehaviour
 
     [Header("애니메이션")]
     [SerializeField] protected Animator anim;
+    public GameResultState gameResultState;
 
     void OnEnable()
     {
@@ -421,6 +424,7 @@ public class MonsterBase : MonoBehaviour
         anim.SetFloat("Speed",m_speed,0.2f,Time.deltaTime);
         anim.SetBool("isMonsterDie", m_isMonsterDie);
         anim.SetInteger("AttackType", (int)attackType);
+        anim.SetInteger("GameResultState", (int)gameResultState);
     }
     #endregion
 }
