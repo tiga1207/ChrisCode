@@ -1,13 +1,18 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Scripts.Manager;
 
 public class BulletSpawn : MonoBehaviour
 {
     public int pierceCount = 0;
     public float explosionRadius = 0f;
 
+
     //탄속
     public float bulletSpeed = 10f;
+
+    public AudioClip hitSound;
+    public AudioClip explosionSound;
 
     // 총발 방향계산
     private Vector3 bulletDir;
@@ -88,6 +93,13 @@ public class BulletSpawn : MonoBehaviour
     {
         if (other.CompareTag("Monster"))
         {
+            // 타격음 재생 _ 수동설정
+            if (hitSound != null)
+            {
+                Scripts.Manager.AudioManager.Instance.PlaySFX(hitSound); 
+            }
+         
+
             MonsterBase monsterBase = other.GetComponent<MonsterBase>();
             if (monsterBase != null)
             {
@@ -98,6 +110,10 @@ public class BulletSpawn : MonoBehaviour
             // 폭발 특성
             if (explosionRadius > 0f)
             {
+                // 폭발음_ 수동설정
+                if (explosionSound != null)
+                { AudioManager.Instance.PlaySFX(explosionSound); }
+
                 Collider[] hits = Physics.OverlapSphere(transform.position, explosionRadius);
                 foreach (var hit in hits)
                 {
