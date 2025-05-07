@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class MonsterSpawner : MonoBehaviour
 {
@@ -45,10 +46,14 @@ public class MonsterSpawner : MonoBehaviour
         Vector3 spawnPos = m_playerPos.position + UnityEngine.Random.insideUnitSphere * m_spawnRange;
         spawnPos.y = 0;
 
-        GameObject monster = MonsterPoolManager.s_instance.GetRandomPool();
+        GameObject monster = MonsterPoolManager.Instance.GetRandomPool();
         monster.transform.position = spawnPos;
     }
 
+    public void SetDieAciton(UnityAction uAciton)
+    {
+        m_dieAction = uAciton;
+    }
 
     private void PatternSpawnTimer()
     {

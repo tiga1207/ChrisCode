@@ -1,27 +1,39 @@
-namespace Scripts
+ï»¿namespace Scripts
 {
     public enum SceneID
     {
-        None,           // ±âº» »óÅÂ 
+        None,           // ê¸°ë³¸ ìƒíƒœ 
         Title,          // Title 1
         CharacterChoose,// InGame 2
         InGame,         // InGame 2
     }
 
-    // °á°ú È®ÀÎ
+    // ê²°ê³¼ í™•ì¸
     public enum GameResultState
     {
-        None,   // ¾ÆÁ÷ °á°ú ¾øÀ½
-        Clear,  // Å¬¸®¾î ¼º°ø
-        Fail    // Å¬¸®¾î ½ÇÆĞ
+        None,   // ì•„ì§ ê²°ê³¼ ì—†ìŒ
+        Clear,  // í´ë¦¬ì–´ ì„±ê³µ
+        Fail    // í´ë¦¬ì–´ ì‹¤íŒ¨
     }
 
-    // °ÔÀÓ »óÅÂ¿ë
+    // ê²Œì„ ìƒíƒœìš©
     public enum GamePlayState
     {
-        None,     // ±âº» »óÅÂ (¼±ÅÃ»çÇ×)
-        Playing,  // °ÔÀÓÀÌ ÁøÇà Áß
-        Paused,   // ÀÏ½Ã Á¤Áö
-        Stopped   // °­Á¦ ¸ØÃã
+        None,     // ê¸°ë³¸ ìƒíƒœ (ì„ íƒì‚¬í•­)
+        Playing,  // ê²Œì„ì´ ì§„í–‰ ì¤‘
+        Paused,   // ì¼ì‹œ ì •ì§€
+        Stopped   // ê°•ì œ ë©ˆì¶¤
+    }
+
+    // ê²Œì„ ìƒíƒœìš©
+    public enum ManagerPriority
+    {
+        None,                   // Error
+        ResourceManager = 100, // Manager
+        SceneManagerEx,
+        AudioManager,
+        UIManager,
+        InGameManager,
+        MonsterPoolManager,
     }
 }

@@ -9,9 +9,15 @@ namespace Scripts.Scene
     {
         public override SceneID SceneID => SceneID.InGame;
 
+        // 필요 리소드 데이터들
         public override void Initialize()
         {
             base.Initialize();
+        }
+
+        public override void LoadManagers()
+        {
+            base.LoadManagers();
             GameObject[] SubscribeManagers = GameObject.FindGameObjectsWithTag("Manager");
 
             ManagerGroup.Instance.RegisterManager(SubscribeManagers);

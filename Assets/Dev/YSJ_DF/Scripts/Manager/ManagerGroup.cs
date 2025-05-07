@@ -6,70 +6,133 @@ namespace Scripts
 {
     public class ManagerGroup : MonoBehaviour
     {
-        private static ManagerGroup _instance;
+        #region Singleton
+        private static ManagerGroup m_instance;
         public static ManagerGroup Instance
         {
             get
             {
-                if (_instance == null)
+                if (m_instance == null)
                 {
-                    string groupName = "@ManagerGroup";
+                    const string groupName = "@ManagerGroup";
                     GameObject go = GameObject.Find(groupName);
                     if (go == null)
                     {
-                        go = new GameObject("@ManagerGroup");
+                        go = new GameObject(groupName);
                         DontDestroyOnLoad(go);
                     }
 
-                    _instance = go.GetOrAddComponent<ManagerGroup>();
+                    m_instance = go.GetOrAddComponent<ManagerGroup>();
                 }
 
-                return _instance;
+                return m_instance;
             }
         }
+        #endregion
 
-        private List<IManager> _managers = new List<IManager>();
+        #region PrivateVariables
+        private List<IManager> m_managers = new();
+        #endregion
 
-        // Register
+        #region PublicMethod
+
         public void RegisterManager(IManager manager)
         {
+            if (manager == null)
+                return;
+
+            if (m_managers.Contains(manager))
+                return;
+
+            m_managers.Add(manager);
+
             GameObject go = manager.GetGameObject();
-
-            _managers.Add(manager);
-            go.transform.parent = this.transform;
+            if (go != null)
+                go.transform.parent = transform;
         }
-        public void RegisterManager(GameObject manager)
+
+        public void RegisterManager(GameObject managerObject)
         {
-            IManager cmp = manager.GetComponent<IManager>();
+            if (managerObject == null)
+                return;
 
-            if (cmp != null)
-                RegisterManager(cmp);
+            IManager manager = managerObject.GetComponent<IManager>();
+            if (manager != null)
+                RegisterManager(manager);
         }
 
-        public void RegisterManager(params IManager[] manager)
+        public void RegisterManager(params IManager[] managers)
         {
-            foreach (IManager go in manager)
-                RegisterManager(go);
-        }
-        public void RegisterManager(params GameObject[] manager)
-        {
-            foreach (GameObject go in manager)
-                RegisterManager(go);
+            for (int i = 0; i < managers.Length; i++)
+                RegisterManager(managers[i]);
         }
 
+        public void RegisterManager(params GameObject[] managerObjects)
+        {
+            for (int i = 0; i < managerObjects.Length; i++)
+                RegisterManager(managerObjects[i]);
+        }
 
         public void InitializeManagers()
         {
-            foreach (var manager in _managers)
+            SortManagersByPriorityAscending();
+
+            for (int i = 0; i < m_managers.Count; i++)
             {
+                IManager manager = m_managers[i];
                 manager.Initialize();
-                manager.GetGameObject().transform.parent = this.transform;
+
+                GameObject go = manager.GetGameObject();
+                Debug.Log("InIt " + go.name);
+                if (go != null)
+                    go.transform.parent = transform;
             }
         }
+
         public void CleanupManagers()
         {
-            foreach (var manager in _managers)
-                manager.Cleanup();
+            SortManagersByPriorityDescending();
+
+            for (int i = 0; i < m_managers.Count; i++)
+                m_managers[i].Cleanup();
         }
+
+        #endregion
+
+        #region PrivateMethod
+
+        private void SortManagersByPriorityAscending()
+        {
+            for (int i = 0; i < m_managers.Count - 1; i++)
+            {
+                for (int j = 0; j < m_managers.Count - i - 1; j++)
+                {
+                    if (m_managers[j].Priority > m_managers[j + 1].Priority)
+                    {
+                        IManager temp = m_managers[j];
+                        m_managers[j] = m_managers[j + 1];
+                        m_managers[j + 1] = temp;
+                    }
+                }
+            }
+        }
+
+        private void SortManagersByPriorityDescending()
+        {
+            for (int i = 0; i < m_managers.Count - 1; i++)
+            {
+                for (int j = 0; j < m_managers.Count - i - 1; j++)
+                {
+                    if (m_managers[j].Priority < m_managers[j + 1].Priority)
+                    {
+                        IManager temp = m_managers[j];
+                        m_managers[j] = m_managers[j + 1];
+                        m_managers[j + 1] = temp;
+                    }
+                }
+            }
+        }
+
+        #endregion
     }
 }

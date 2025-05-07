@@ -1,10 +1,10 @@
-using Scripts.Interface;
+ï»¿using Scripts.Interface;
 using UnityEngine;
 using UnityEngine.Events;
 
-// °ÔÀÓÀÇ ½Â, ÆĞ ÆÇ´Ü
-// °ÔÀÓ ½ÇÇà ½Ã°£ ÆÇ´Ü
-// ÇÃ·¹ÀÌ¾îºí Ä³¸¯ÅÍ »óÅÂ ÃßÀû
+// ê²Œì„ì˜ ìŠ¹, íŒ¨ íŒë‹¨
+// ê²Œì„ ì‹¤í–‰ ì‹œê°„ íŒë‹¨
+// í”Œë ˆì´ì–´ë¸” ìºë¦­í„° ìƒíƒœ ì¶”ì 
 namespace Scripts.Manager
 {
 
@@ -18,15 +18,17 @@ namespace Scripts.Manager
         [SerializeField] private GameObject _playerObject;
         private PlayerHp _playerHpCmp;
 
-        [SerializeField] private float _inGameClearMinutes = 5.0f; // Å¬¸®¾î ½Ã°£ (10.5m => 630s)
+        [SerializeField] private float _inGameClearMinutes = 5.0f; // í´ë¦¬ì–´ ì‹œê°„ (10.5m => 630s)
         private float _inGameClearTime;
-        private float _inGameStartTime; // ½ÃÀÛ ½Ã°£
-        private float _inGameCurrenttTime; // ÇöÀç ½Ã°£
+        private float _inGameStartTime; // ì‹œì‘ ì‹œê°„
+        private float _inGameCurrenttTime; // í˜„ì¬ ì‹œê°„
 
-        // ¿ÜºÎ ¿¬°á °¡´É ÀÌº¥Æ®µé(ÃÖ¼Ò Start¿¡¼­´Â ³Ö¾îÁÖ±â)
+        // ì™¸ë¶€ ì—°ê²° ê°€ëŠ¥ ì´ë²¤íŠ¸ë“¤(ìµœì†Œ Startì—ì„œëŠ” ë„£ì–´ì£¼ê¸°)
         public UnityEvent OnPlayStateEntered;
         public UnityEvent OnPauseStateEntered;
         public UnityEvent OnStopStateEntered;
+
+        public int Priority => (int)ManagerPriority.InGameManager;
 
         // IManager
         public void Initialize()
@@ -93,7 +95,7 @@ namespace Scripts.Manager
         }
         private void CheckResultState()
         {
-            // °ÔÀÓ °á°ú°¡ ³ª¿ÔÀ» ¶§
+            // ê²Œì„ ê²°ê³¼ê°€ ë‚˜ì™”ì„ ë•Œ
             if (_resultState != GameResultState.None || _playerHpCmp == null)
                 return;
 
@@ -105,8 +107,8 @@ namespace Scripts.Manager
         }
 
 
-        // UI ÂÊ¿¡¼­ ¹öÆ° °°Àº°Å ´­·¶À» ¶§ ÀüÈ¯ ´­·¯ÁÖ¸é µÊ.
-        // UnityEvent¿¡ ÆË¾÷ °°Àº°Å º¸¿©ÁÖ´Â ½ÄÀ¸·Î »ç¿ë°¡´É
+        // UI ìª½ì—ì„œ ë²„íŠ¼ ê°™ì€ê±° ëˆŒë €ì„ ë•Œ ì „í™˜ ëˆŒëŸ¬ì£¼ë©´ ë¨.
+        // UnityEventì— íŒì—… ê°™ì€ê±° ë³´ì—¬ì£¼ëŠ” ì‹ìœ¼ë¡œ ì‚¬ìš©ê°€ëŠ¥
         public void SetPlayState(GamePlayState state)
         {
             if (_playState == state) return;
@@ -126,7 +128,7 @@ namespace Scripts.Manager
             }
         }
 
-        // UI ÂÊ¿¡¼­ °¡Á®´Ù°¡ »ç¿ëÇÏ¸é µË´Ï´Ù.
+        // UI ìª½ì—ì„œ ê°€ì ¸ë‹¤ê°€ ì‚¬ìš©í•˜ë©´ ë©ë‹ˆë‹¤.
         public GameResultState GetGameResultState()
         {
             return _resultState;

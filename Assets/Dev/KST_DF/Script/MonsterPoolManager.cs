@@ -1,37 +1,25 @@
-using System.Collections;
+using Scripts;
+using Scripts.Interface;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MonsterPoolManager : MonoBehaviour
+public class MonsterPoolManager : SimpleSingleton<MonsterPoolManager>, IManager
 {
-    public static MonsterPoolManager s_instance;
     [SerializeField] private GameObject[] m_prefabs;
     [SerializeField] private int m_poolSize = 5;
     private List<GameObject>[] m_pools;
 
-    private void Awake()
-    {
-        if(s_instance == null)
-        {
-            s_instance = this;
-            DontDestroyOnLoad(gameObject);
-        }   
-        else
-        {
-            Destroy(gameObject);
-        }
-        InitPools();
-    }
+    public int Priority => (int)ManagerPriority.MonsterPoolManager;
 
     void InitPools()
     {
         m_pools = new List<GameObject>[m_prefabs.Length];
 
-        for(int i = 0; i<m_prefabs.Length ; i++)
+        for (int i = 0; i < m_prefabs.Length; i++)
         {
             m_pools[i] = new List<GameObject>();
 
-            for(int j = 0; j<  m_poolSize; j++)
+            for (int j = 0; j < m_poolSize; j++)
             {
                 GameObject monster = Instantiate(m_prefabs[i],this.transform);
                 monster.SetActive(false);
@@ -43,9 +31,9 @@ public class MonsterPoolManager : MonoBehaviour
     {
         int index = (int)type;
 
-        foreach(var mon in m_pools[index])
+        foreach (var mon in m_pools[index])
         {
-            if(!mon.activeSelf)
+            if (!mon.activeSelf)
             {
                 mon.SetActive(true);
                 mon.GetComponent<MonsterBase>().isPool = true; // 추후 논의 후 태그를 pooled로 바꾸는 것도 검토 필요.
@@ -60,12 +48,12 @@ public class MonsterPoolManager : MonoBehaviour
 
     public GameObject GetPool(int index)
     {
-        foreach(var mon in m_pools[index])
+        foreach (var mon in m_pools[index])
         {
-            if(!mon.activeSelf)
+            if (!mon.activeSelf)
             {
                 mon.SetActive(true);
-                mon.GetComponent<MonsterBase>().isPool = true; 
+                mon.GetComponent<MonsterBase>().isPool = true;
                 return mon;
             }
         }
@@ -86,6 +74,18 @@ public class MonsterPoolManager : MonoBehaviour
         monster.gameObject.SetActive(false);
     }
 
+    public void Initialize()
+    {
+        InitPools();
+    }
 
+    public void Cleanup()
+    {
+        throw new System.NotImplementedException();
+    }
 
+    public GameObject GetGameObject()
+    {
+        throw new System.NotImplementedException();
+    }
 }

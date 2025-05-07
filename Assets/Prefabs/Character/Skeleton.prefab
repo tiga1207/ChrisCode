@@ -3685,7 +3685,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_hp: 10
   m_maxHp: 10
-  attackType: 0
+  attackType: 2
   m_attackDamage: 2
   m_collsionDamage: 1
   m_attackCooldown: 1

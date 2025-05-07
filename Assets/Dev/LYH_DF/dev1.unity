@@ -374,7 +374,6 @@ GameObject:
   - component: {fileID: 876380672}
   - component: {fileID: 876380671}
   - component: {fileID: 876380670}
-  - component: {fileID: 876380674}
   - component: {fileID: 876380675}
   - component: {fileID: 876380676}
   m_Layer: 0
@@ -470,20 +469,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &876380674
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 876380669}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f589d015c03d3b748b9f129164d41c81, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveSpeed: 10
-  jumpPower: 10
 --- !u!114 &876380675
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -499,7 +484,7 @@ MonoBehaviour:
   currentExp: 0
   level: 1
   expToLevelUp: 100
-  traitUIManager: {fileID: 1314316549}
+  traitUIManager: {fileID: 0}
 --- !u!114 &876380676
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -512,9 +497,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c22fa9a3c1788847b5e39a627ecca0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_CurrentHealth: 5
-  m_MaxHealth: 5
-  m_LimitMaxHealth: 10
+  CurrentHealth: 5
+  MaxHealth: 5
+  LimitMaxHealth: 10
+  isDead: 0
+  isHit: 0
+  hitSound: {fileID: 0}
+  deathSound: {fileID: 0}
 --- !u!1 &1064547861
 GameObject:
   m_ObjectHideFlags: 0

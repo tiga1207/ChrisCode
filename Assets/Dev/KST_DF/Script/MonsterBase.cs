@@ -402,7 +402,7 @@ public class MonsterBase : MonoBehaviour
         if(isPool == true)
         {
             Debug.Log($"{gameObject.name} 풀 반납");
-            MonsterPoolManager.s_instance.ReturnPool(this);
+            MonsterPoolManager.Instance.ReturnPool(this);
         }
         else
         {
