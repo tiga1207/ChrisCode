@@ -40,7 +40,6 @@ public class PlayerAttack : MonoBehaviour
         if (attackTimer >= 1f / attackSpeed)
         {
             attackTimer = 0f;
-            Debug.Log("초발사");
             TryShoot();
         }
 
@@ -49,30 +48,38 @@ public class PlayerAttack : MonoBehaviour
 
     public void TryShoot()
     {
-
         if (tracker.nearestTarget != null && bulletPerfab != null)
         {
-            Debug.Log("발사");
+            Vector3 targetPos = tracker.nearestTarget.position;
+            targetPos.y = attackPoint.position.y;
 
-            // 공격이 나갈 방향
+            Vector3 direction = (targetPos - attackPoint.position).normalized;
 
+            // 중앙 발사
+            ShootInDirection(direction);
 
-            Vector3 mostos = tracker.nearestTarget.position;
+            // 좌우 추가 발사체 (샷건)
+            float angleStep = 15f;
+            for (int i = 1; i <= extraProjectileCount; i++)
+            {
+                Vector3 left = Quaternion.Euler(0, -i * angleStep, 0) * direction;
+                Vector3 right = Quaternion.Euler(0, i * angleStep, 0) * direction;
 
-            mostos.y = attackPoint.position.y;
-            Vector3 direction = (mostos - attackPoint.position).normalized;
-            //direction.y = attackPoint.position.y;
-
-
-            //  해당 방향으로의 회전값
-            Quaternion rotation = Quaternion.LookRotation(direction);
-
-            // 소환
-            BulletSpawn newBullet = BulletSpawn.Spawn(bulletPerfab, attackPoint.position, rotation);
-            newBullet.BulletStartDirection(direction);
-            newBullet.attackPower = attackPower;
-
+                ShootInDirection(left);
+                ShootInDirection(right);
+            }
         }
+    }
+
+    private void ShootInDirection(Vector3 dir)
+    {
+        Quaternion rot = Quaternion.LookRotation(dir);
+        BulletSpawn bullet = BulletSpawn.Spawn(bulletPerfab, attackPoint.position, rot);
+        bullet.BulletStartDirection(dir);
+        bullet.attackPower = attackPower;
+        bullet.pierceCount = pierceCount;
+        bullet.explosionRadius = explosionRadius;
+        bullet.transform.localScale *= projectileSizeMultiplier;
     }
 
     //  공격이 나갈 위치 -  무기에 추가해서 설정
