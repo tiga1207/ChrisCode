@@ -1626,7 +1626,8 @@ GameObject:
   - component: {fileID: 896150774526458834}
   - component: {fileID: 3100148086976602383}
   - component: {fileID: 8207372480859528588}
-  m_Layer: 6
+  - component: {fileID: 7037682552368852359}
+  m_Layer: 15
   m_Name: Goblin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1675,7 +1676,7 @@ Animator:
   m_GameObject: {fileID: 3161129422670007100}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: b69174d668ba02d44b14a084b217670a, type: 3}
-  m_Controller: {fileID: 9100000, guid: ecedf3d70aa0d4a56ad93808aac47408, type: 2}
+  m_Controller: {fileID: 9100000, guid: f3356aafe49cc934e9e7503ebf532c35, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -1793,6 +1794,22 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &7037682552368852359
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3161129422670007100}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2ef31caf2046364285cd21114743285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shotSound: {fileID: 8300000, guid: 727597d5f3999491ea0ee5ecec8f64b1, type: 3}
+  hurtSound: {fileID: 8300000, guid: 646d5e8a87d4aab4ebb8df843fd09723, type: 3}
+  slashSound: {fileID: 8300000, guid: 178b03530acb54f18847f85200fff708, type: 3}
+  deadSound: {fileID: 8300000, guid: 7ac0dfae083d2b94780328d7e42f29e7, type: 3}
 --- !u!1 &3463827974993997852
 GameObject:
   m_ObjectHideFlags: 0
