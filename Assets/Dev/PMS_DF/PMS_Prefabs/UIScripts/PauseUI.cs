@@ -1,3 +1,5 @@
+using Scripts;
+using Scripts.Manager;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -26,6 +28,7 @@ public class PauseUI : MonoBehaviour
         //일시정지 해제 및 게임 진행
         //현재 Open된 UI 닫기
         TMP_UIManager.Instance.CloseCurrentUI();
+        InGameManager.Instance.SetPlayState(GamePlayState.Playing);
     }
 
     private void OnOptionButtonClicked()
@@ -42,5 +45,6 @@ public class PauseUI : MonoBehaviour
     private void QuitButtonClicked()
     {
         //게임 종료 -> 타이틀 화면 가기
+        SceneManagerEx.Instance.LoadSceneWithFade("PMS_TiTleScene");
     }
 }
